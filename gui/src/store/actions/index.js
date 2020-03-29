@@ -2,5 +2,11 @@ export {
     fetchPokemon,
     nextPokemonPage,
     previousPokemonPage,
-    fetchPokemonById
+    fetchPokemonById,
+    
 } from './pokemon'
+export {
+    login,
+    setAuthRedirectPath,
+    logout,
+} from './auth'

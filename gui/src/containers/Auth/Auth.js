@@ -5,6 +5,8 @@ import classes from './Auth.module.css'
 import {Redirect} from 'react-router-dom'
 import Spinner from '../../components/UI/Spinner/Spinner'
 import { updateObject, checkValidity} from '../../shared/utility'
+import { connect } from 'react-redux'
+import * as actions from '../../store/actions/index'
 
 class Auth extends React.Component{
     state = {
@@ -44,7 +46,10 @@ class Auth extends React.Component{
     }
 
     componentDidMount(){
-    
+        if(this.props.auth.token != null){
+            console.log("ONSETAUTHREDIRECT")
+            this.props.onSetAuthRedirectPath()
+        }       
     }
 
     inputChangedHandler = (event, controlName) => {
@@ -62,6 +67,9 @@ class Auth extends React.Component{
 
     submitHandler = (event) =>{
         event.preventDefault()
+        const email = this.state.controls.email.value
+        const password = this.state.controls.password.value
+        this.props.onLogin(email, password)
     }
 
     switchAuthModeHandler = () =>{
@@ -69,7 +77,7 @@ class Auth extends React.Component{
     }
     
     render(){
-
+        console.log(this.props.auth)
         const formElementsArray= [] //Convert State to an Array to loop Thru
         for(let key in this.state.controls){
             formElementsArray.push({
@@ -103,8 +111,8 @@ class Auth extends React.Component{
             )
         }
         let authRedirect = null
-        if (this.props.isAuthenticated){
-            authRedirect = <Redirect to={this.props.authRedirectPath}/>
+        if (this.props.auth.token !== null){
+            authRedirect = <Redirect to={this.props.auth.authRedirectPath}/>
         }
         return(
             <div className={classes.Auth}>
@@ -120,7 +128,17 @@ class Auth extends React.Component{
         )
     }
 }
+const mapStateToProps = state => {
+    return {
+        auth : state.auth
+    }
+}
+const mapDispatchToProps = dispatch => {
+    return {
+        onLogin: (email ,password) => { dispatch(actions.login(email, password))},
+        onSetAuthRedirectPath: () => dispatch(actions.setAuthRedirectPath('/'))
+    }
+}
 
 
-
-export default Auth
+export default connect(mapStateToProps, mapDispatchToProps)(Auth)

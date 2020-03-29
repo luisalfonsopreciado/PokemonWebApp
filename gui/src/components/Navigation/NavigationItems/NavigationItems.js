@@ -5,7 +5,8 @@ import NavigationItem from './NavigationItem/NavigationItem'
 const NavigationItems = (props) => (
     <ul className={classes.NavigationItems}>
         <NavigationItem link="/">Poke App</NavigationItem>
-        <NavigationItem link="/login">Login</NavigationItem>
+        {!props.isAuthenticated ?  <NavigationItem link="/login">Login</NavigationItem> : <NavigationItem link="/logout">Logout</NavigationItem>}
+        {props.isAuthenticated ? <NavigationItem link="/profile">{props.userId}</NavigationItem> : null}
     </ul>
 )
 export default NavigationItems
