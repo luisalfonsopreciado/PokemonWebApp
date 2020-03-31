@@ -59,7 +59,7 @@ export default class PokeCard extends React.Component{
                                 {this.props.pokemon.name.toLowerCase().split(' ').map(letter => letter.charAt(0).toUpperCase() + letter.substring(1))}
                             </h3>
                             <div className="mt-3">
-                                <Button clicked={this.props.showModal} btnType="Info">Quick View</Button>
+                                <Button clicked={() => this.props.showModal(this.props.data)} btnType="Info">Quick View</Button>
                                 <Button clicked={this.props.pokemonSelect} btnType="Danger">Detail View</Button>
                             </div>
                         </div>

@@ -15,6 +15,13 @@ export const fetchPokemonFailed = () => {
         type :  actions.FETCH_POKEMON_FAILED
     }
 }
+export const addPokemonToState = (pokemon) => {
+    return {
+        type : actions.ADD_POKEMON_TO_STATE,
+        pokemon : pokemon,
+    }
+}
+
 export const fetchPokemonSuccess = (pokemonArray, lowerBound, upperBound) => {
     return {
         type : actions.FETCH_POKEMON_SUCCESS,
@@ -66,5 +73,11 @@ export const fetchPokemonByIdFailed = (err) => {
     return {
         type : actions.FETCH_POKEMON_BY_ID_FAILED,
         error : err
+    }
+}
+
+export const removePokemonFromState = () => {
+    return {
+        type: actions.REMOVE_POKEMON_FROM_STATE,
     }
 }

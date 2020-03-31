@@ -20,11 +20,13 @@ class PokeList extends Component{
         this.props.history.push({pathname: '/pokemon/' + name})
     }
 
-    onViewModal = () =>{
-        this.setState({displayModal: true})
+    onViewModal = (pokemon) =>{
+        this.props.onQuickViewPokemon(pokemon)
+        // this.setState({displayModal: true})
     }
     onRemoveModal = () =>{
-        this.setState({displayModal: false})
+        this.props.onRemoveModal()
+        // this.setState({displayModal: false})
     }
 
     render(){
@@ -35,6 +37,7 @@ class PokeList extends Component{
                 url={pokemon.url}
                 pokemon={pokemon}
                 key={pokemon.name}
+                data={pokemon}
                 pokemonSelect={()=>this.pokemonSelectedHandler(pokemon.name)}
                 showModal={this.onViewModal}
                 />
@@ -50,8 +53,8 @@ class PokeList extends Component{
                     upper={964}
                     next={() => this.props.nextPage(this.props.pkm.offset, this.props.pkm.limit)}
                     previous={() => this.props.previousPage(this.props.pkm.offset, this.props.pkm.limit)}/>
-                {this.state.displayModal ? <Modal closed={this.onRemoveModal} show={this.state.displayModal} /> : null}
-                {this.state.displayModal ? <Backdrop show={this.state.displayModal} /> : null}
+                {this.props.displayModal ? <Modal closed={this.onRemoveModal} show={this.props.displayModal} pokemon={this.props.pkm.pokemon}/> : null}
+                {this.props.displayModal ? <Backdrop show={this.props.displayModal} /> : null}
             </div>
         )
     }
@@ -62,6 +65,7 @@ class PokeList extends Component{
 const mapStateToProp = state =>{
     return{
         pkm : state.pokemon,
+        displayModal : state.pokemon.displayModal,
 
     }
 }
@@ -69,7 +73,9 @@ const mapDispatchToProps = dispatch =>{
     return{
         getPokemon: (upperBound, lowerBound) => dispatch(actions.fetchPokemon(upperBound, lowerBound)),
         nextPage: (upperBound, lowerBound) => dispatch(actions.nextPokemonPage(upperBound, lowerBound)),
-        previousPage: (upperBound, lowerBound) => dispatch(actions.previousPokemonPage(upperBound, lowerBound))
+        previousPage: (upperBound, lowerBound) => dispatch(actions.previousPokemonPage(upperBound, lowerBound)),
+        onQuickViewPokemon : (pokemon) => dispatch(actions.addPokemonToState(pokemon)),
+        onRemoveModal : () => dispatch(actions.removePokemonFromState()),
     }
 }
 
