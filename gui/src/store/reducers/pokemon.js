@@ -4,7 +4,7 @@ import { updateObject } from "../../shared/utility";
 const initialState = {
   pokemons: [],
   offset: 0,
-  limit: 28,
+  limit: 20,
   pokemon: {},
   loading: true,
   displayModal: false,

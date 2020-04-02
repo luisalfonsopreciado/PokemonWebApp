@@ -4,7 +4,6 @@ import NavigationItems from '../NavigationItems/NavigationItems'
 import { connect } from 'react-redux'
 
 const toolbar = props =>{
-    console.log(props.isAuth)
     return (
     <header className={classes.Toolbar}>
         <nav className={classes.DesktopOnly}>

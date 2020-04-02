@@ -19,5 +19,6 @@ class UserFavoritePokemonViewSet(viewsets.ModelViewSet):
 
 class CustomUserViewSet(viewsets.ModelViewSet):
     queryset = CustomUser.objects.all()
-    permission_classes = [IsAdminUser]
+    permission_classes = [IsAdminUser, IsOwnerOrReadOnly]
     serializer_class = CustomUserSerializer
+

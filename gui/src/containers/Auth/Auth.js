@@ -80,7 +80,6 @@ class Auth extends React.Component{
     }
     
     render(){
-        console.log(this.props.auth)
         const formElementsArray= [] //Convert State to an Array to loop Thru
         for(let key in this.state.controls){
             formElementsArray.push({

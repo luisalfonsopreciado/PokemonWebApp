@@ -71,7 +71,7 @@ const mapStateToProp = state =>{
 }
 const mapDispatchToProps = dispatch =>{
     return{
-        getPokemon: (upperBound, lowerBound) => dispatch(actions.fetchPokemon(upperBound, lowerBound)),
+        getPokemon: (upperBound, lowerBound) => dispatch(actions.fetchPokemonList(upperBound, lowerBound)),
         nextPage: (upperBound, lowerBound) => dispatch(actions.nextPokemonPage(upperBound, lowerBound)),
         previousPage: (upperBound, lowerBound) => dispatch(actions.previousPokemonPage(upperBound, lowerBound)),
         onQuickViewPokemon : (pokemon) => dispatch(actions.addPokemonToState(pokemon)),

@@ -1,6 +1,6 @@
 import * as actionTypes from '../actions/actionTypes'
 import { updateObject }  from '../../shared/utility'
-import { setUserInformation } from '../actions/auth'
+// import { setUserInformation } from '../actions/auth'
 
 const initialState = {
     token: null,

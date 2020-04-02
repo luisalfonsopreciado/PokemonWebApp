@@ -1,12 +1,17 @@
 export {
-    fetchPokemon,
+    fetchPokemonList,
     nextPokemonPage,
     previousPokemonPage,
     fetchPokemonById,
     addPokemonToState,
     removePokemonFromState,
-    getUserFavoritePokemon
-    
+    getUserFavoritePokemon,
+    fetchPokemonByIdFailed,
+    fetchPokemonByIdSuccess,
+    getUserFavoritePokemonSuccess,
+    getUserFavoritePokemonFailed,
+    fetchPokemonSuccess,
+    fetchPokemonFailed, 
 } from './pokemon'
 export {
     login,
