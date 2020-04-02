@@ -27,6 +27,7 @@ export default class PokeCard extends React.Component{
             })      
         })
     }
+      
     
     render(){
         return(

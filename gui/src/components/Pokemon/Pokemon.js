@@ -3,15 +3,16 @@ import classes from './Pokemon.module.css'
 import {TYPE_COLOR} from './PokemonConstants'
 import {connect} from 'react-redux'
 import * as actions from '../../store/actions/index'
+import Spinner from '../UI/Spinner/Spinner'
 
 class Pokemon  extends Component { 
 
     componentDidMount(){
-        this.props.onLoadPokemon(this.props.match.params.id)
+         this.props.onLoadPokemon(this.props.match.params.id)
     }
 
     render(){
-        let card = <p>Loading</p>
+        let card = <Spinner />
         if(!this.props.loading && this.props.pkm){
             card = (
                 <div className={classes.Card}> 

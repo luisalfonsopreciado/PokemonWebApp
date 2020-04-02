@@ -5,6 +5,8 @@ import classes from '../Auth.module.css'
 import {Redirect} from 'react-router-dom'
 import Spinner from '../../../components/UI/Spinner/Spinner'
 import { updateObject, checkValidity} from '../../../shared/utility'
+import { connect } from 'react-redux'
+import * as actions from '../../../store/actions/index'
 
 class Auth extends React.Component{
     state = {
@@ -74,7 +76,10 @@ class Auth extends React.Component{
     }
 
     componentDidMount(){
-    
+        if(this.props.auth.token != null){
+            console.log("ONSETAUTHREDIRECT")
+            this.props.onSetAuthRedirectPath()
+        } 
     }
 
     inputChangedHandler = (event, controlName) => {
@@ -92,6 +97,11 @@ class Auth extends React.Component{
 
     submitHandler = (event) =>{
         event.preventDefault()
+        const email = this.state.controls.email.value
+        const username = this.state.controls.username.value
+        const password1 = this.state.controls.password1.value
+        const password2 = this.state.controls.password2.value
+        this.props.onSignup(email, username, password1, password2)
     }
 
     switchAuthModeHandler = () =>{
@@ -151,6 +161,19 @@ class Auth extends React.Component{
     }
 }
 
+const mapStateToProps = state => {
+    return {
+        auth : state.auth
+    }
+}
+
+const mapDispatchToProps = dispatch => {
+    return {
+        onSignup: (username, email, password1, password2) => { dispatch(actions.signup(username, email, password1, password2))},
+        onSetAuthRedirectPath: () => dispatch(actions.setAuthRedirectPath('/'))
+    }
+}
 
 
-export default Auth
+
+export default connect(mapStateToProps, mapDispatchToProps)(Auth)

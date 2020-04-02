@@ -5,6 +5,7 @@ import * as actions from '../../store/actions/index'
 import PokeCard from '../PokeCard/PokeCard'
 import Modal from '../../components/Modal/Modal'
 import Backdrop from '../../components/Backdrop/Backdrop'
+import Spinner from '../../components/UI/Spinner/Spinner'
 
 class PokeList extends Component{
     state = {
@@ -15,9 +16,8 @@ class PokeList extends Component{
     componentDidMount(){
         this.props.getPokemon(this.props.pkm.offset, this.props.pkm.limit)
     }
-
-    pokemonSelectedHandler(name){
-        this.props.history.push({pathname: '/pokemon/' + name})
+    detailViewHandler(pokemon){
+        this.props.history.push('pokemon/' + pokemon)
     }
 
     onViewModal = (pokemon) =>{
@@ -30,7 +30,7 @@ class PokeList extends Component{
     }
 
     render(){
-        let PokemonList = null
+        let PokemonList = <Spinner />
         if(this.props.pkm.pokemons){
             PokemonList = this.props.pkm.pokemons.map((pokemon, key) =>{
                 return <PokeCard
@@ -38,8 +38,8 @@ class PokeList extends Component{
                 pokemon={pokemon}
                 key={pokemon.name}
                 data={pokemon}
-                pokemonSelect={()=>this.pokemonSelectedHandler(pokemon.name)}
                 showModal={this.onViewModal}
+                pokemonSelect={() => this.detailViewHandler(pokemon.name)}
                 />
             })
         }

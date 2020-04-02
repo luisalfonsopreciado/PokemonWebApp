@@ -47,9 +47,12 @@ class Auth extends React.Component{
 
     componentDidMount(){
         if(this.props.auth.token != null){
-            console.log("ONSETAUTHREDIRECT")
             this.props.onSetAuthRedirectPath()
         }       
+    }
+
+    pokemonSelectedHandler(name){
+        this.props.history.push({pathname: '/pokemon/' + name})
     }
 
     inputChangedHandler = (event, controlName) => {

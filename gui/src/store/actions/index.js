@@ -4,12 +4,14 @@ export {
     previousPokemonPage,
     fetchPokemonById,
     addPokemonToState,
-    removePokemonFromState
+    removePokemonFromState,
+    getUserFavoritePokemon
     
 } from './pokemon'
 export {
     login,
     setAuthRedirectPath,
     logout,
-
+    signup,
+    authCheckState
 } from './auth'

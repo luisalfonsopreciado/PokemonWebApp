@@ -7,7 +7,8 @@ const initialState = {
   limit: 28,
   pokemon: {},
   loading: true,
-  displayModal: false
+  displayModal: false,
+  favoritePokemon: [],
 };
 const fetchPokemon = (state, action) => {
   return {
@@ -23,8 +24,11 @@ const addPokemonToGlobalState = (state, action) => {
   return updateObject(state, { pokemon: action.pokemon, displayModal: true });
 };
 const removePokemonFromState = (state, action) => {
-  return updateObject(state, { pokemon: {}, displayModal: false });
+  return updateObject(state, { displayModal: false });
 };
+const  addUserFavoritePokemonToGlobalSTate = (state, action) => {
+  return updateObject(state, {favoritePokemon: action.pokemon, loading: false} )
+}
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
@@ -38,6 +42,10 @@ const reducer = (state = initialState, action) => {
       return addPokemonToGlobalState(state, action);
     case actionTypes.REMOVE_POKEMON_FROM_STATE:
         return removePokemonFromState(state, action);
+    case actionTypes.GET_USER_FAVORITE_POKEMON_SUCCESS:
+        return addUserFavoritePokemonToGlobalSTate(state, action);
+    case actionTypes.GET_USER_FAVORITE_POKEMON_FAILED:
+        return {};
     default:
       return state;
   }
