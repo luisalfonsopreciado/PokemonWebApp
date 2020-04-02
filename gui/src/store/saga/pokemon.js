@@ -31,9 +31,9 @@ export function* fetchPokemonByIdSaga(action) {
 export function* getUserFavoritePokemonSaga(action) {
   try {
     const res = yield axiosUsers.get("user-favorite/" + action.id);
-    put(actions.getUserFavoritePokemonSuccess(res.data));
+    yield put(actions.getUserFavoritePokemonSuccess(res.data));
   } catch (error) {
-    put(actions.getUserFavoritePokemonFailed(error));
+    yield put(actions.getUserFavoritePokemonFailed(error));
   }
 }
 
