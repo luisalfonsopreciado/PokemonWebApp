@@ -25,8 +25,9 @@ export function* authCheckState() {
     if (expirationDate <= new Date()) {
       put(actions.logout());
     } else {
-      const userId = localStorage.getItem("userId");
-      yield put(actions.authSuccess(token, userId));
+      // const userId = localStorage.getItem("userId");
+      // yield put(actions.authSuccess(token, userId));
+      yield put(actions.getUserCredentials(token))
       yield put(
         actions.checkAuthTimeout(
           (expirationDate.getTime() - new Date().getTime()) / 1000
@@ -51,8 +52,7 @@ export function* loginUserSaga(action) {
     localStorage.setItem("token", res.data.key);
     localStorage.setItem("expirationDate", expirationDate);
     localStorage.setItem("userId", action.email);
-    // dispatch(getUserCredetials(authData))
-    yield put(actions.authSuccess(res.data.key, action.email));
+    yield put(actions.getUserCredentials(res.data.key));
     yield put(actions.checkAuthTimeout(3600));
   } catch (error) {
     yield put(actions.authFail(error.response.data));
@@ -67,18 +67,12 @@ export function* signupUserSaga(action) {
       "Content-Type": "application/json",
     },
   };
-  const username = action.username
-  const email = action.email
-  const password1 = action.password1
-  const password2 = action.password2
-  const authData = {
-    username: action.username,
-    email: action.email,
-    password1: action.password1,
-    password2: action.password2,
-  };
+  const username = action.username;
+  const email = action.email;
+  const password1 = action.password1;
+  const password2 = action.password2;
   // Request Body
-  const body = JSON.stringify({username, email, password1, password2 });
+  const body = JSON.stringify({ username, email, password1, password2 });
   console.log(config);
   console.log(body);
   let url = "registration/";
@@ -92,5 +86,40 @@ export function* signupUserSaga(action) {
     yield put(actions.checkAuthTimeout(3600));
   } catch (error) {
     yield put(actions.authFail(error.response.data));
+  }
+}
+
+export function* getUserCredentialsSaga(action) {
+  console.log(action.token);
+  // Headers
+  const config = {
+    headers: {
+      "Content-Type": "application/json",
+      
+    },
+  };
+  // If token, add to headers config
+  if (action.token) {
+    config.headers["Authorization"] = `Token ${action.token}`;
+  }else{
+    yield put(actions.authFail({}))
+  }
+  console.log(config)
+
+  try {
+    const res = yield axios.get("user/", config);
+
+    const userData = {
+        pk : res.data.pk,
+        username: res.data.username,
+        email: res.data.email,
+        first_name: res.data.first_name,
+        last_name: res.data.last_name   
+    }
+    console.log(userData);
+
+    yield put(actions.authSuccess(action.token, userData));
+  } catch (error) {
+    yield put(actions.authFail(error));
   }
 }

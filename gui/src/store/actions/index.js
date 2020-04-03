@@ -24,4 +24,6 @@ export {
     authSuccess,
     checkAuthTimeout,
     authStart,
+    setUserInformation,
+    getUserCredentials
 } from './auth'

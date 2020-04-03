@@ -1,4 +1,3 @@
-import axios from "../../axios/auth";
 import * as actionTypes from "./actionTypes";
 
 export const authStart = () => {
@@ -7,11 +6,11 @@ export const authStart = () => {
   };
 };
 
-export const authSuccess = (token, userId) => {
+export const authSuccess = (token, userData) => {
   return {
     type: actionTypes.AUTH_SUCCESS,
     token: token,
-    userId: userId
+    userData: userData,
   };
 };
 
@@ -53,19 +52,6 @@ export const signup = (username, email, password1, password2) => {
   }
 };
 
-// export const signupSuccess= () => {
-//   return {
-//     action: actionTypes.AUTH_SIGNUP_SUCCESS
-//   }
-// }
-
-// export const signupFailed= (error) => {
-//   return {
-//     action: actionTypes.AUTH_SIGNUP_FAILED,
-//     error: error,
-//   }
-// }
-
 export const login = (email, password) => {
   return{
     type: actionTypes.AUTH_LOGIN,
@@ -82,20 +68,10 @@ export const setAuthRedirectPath = path => {
   };
 };
 
-export const getUserCredetials = (authData) => {
-  return dispatch => {
-    let url = "user/";
-    axios.post(url,  authData).then(res=> {
-      const userData = {
-        pk : res.data.pk,
-        username: res.data.username,
-        email: res.data.email,
-    }
-    dispatch(setUserInformation(userData))
-    })
-    .catch(err => {
-      dispatch(authFail(err))
-    })
+export const getUserCredentials = (token) => {
+  return {
+    type: actionTypes.AUTH_GET_USER_CREDENTIALS,
+    token: token,
   }
 }
 

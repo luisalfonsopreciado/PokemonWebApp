@@ -7,7 +7,7 @@ const toolbar = props =>{
     return (
     <header className={classes.Toolbar}>
         <nav className={classes.DesktopOnly}>
-        <NavigationItems isAuthenticated={props.isAuth} userId={props.userId}/>
+        <NavigationItems isAuthenticated={props.isAuth} userId={props.email}/>
         </nav>
     </header>
     )
@@ -15,8 +15,7 @@ const toolbar = props =>{
 const mapStateToProps = state => {
     return {
         isAuth: state.auth.token !== null,
-        userId: state.auth.userId,
-
+        email: state.auth.userData.email,
     }
 }
 export default connect(mapStateToProps)(toolbar)

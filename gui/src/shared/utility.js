@@ -21,3 +21,13 @@ export const checkValidity = (value, rules) =>{
     }
     return isValid
 }
+
+export const handleErrorHandler = (error) => {
+    const keys = Object.keys(error)
+    const values = Object.values(error)
+    const Message = []
+    for(let i = 0; i < keys.length; i++){
+        Message.push(keys[i] + " : " +  values[i][0])
+    }
+    return Message
+}

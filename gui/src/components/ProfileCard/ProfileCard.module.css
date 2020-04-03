@@ -1,0 +1,14 @@
+.Container{
+    width: 400px;
+    height: 500px;
+    margin: 40px 10px;
+    background-color: white;
+    border-radius: 5%;
+    padding: 10px;
+}
+.ProfileImage{
+    position: relative;
+    width: 90%;
+    height: 50%;
+    left: 5%;
+}

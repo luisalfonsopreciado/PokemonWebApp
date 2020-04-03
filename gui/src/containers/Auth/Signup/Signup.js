@@ -7,6 +7,7 @@ import Spinner from '../../../components/UI/Spinner/Spinner'
 import { updateObject, checkValidity} from '../../../shared/utility'
 import { connect } from 'react-redux'
 import * as actions from '../../../store/actions/index'
+import {handleErrorHandler} from '../../../shared/utility'
 
 class Auth extends React.Component{
     state = {
@@ -138,24 +139,22 @@ class Auth extends React.Component{
             form = <Spinner/>
         }
 
-        let errorMessage = null
-        if(this.props.error) {
-            errorMessage = ( 
-                <p>Incorrect Credentials</p>
-            )
-        }
+        
         let authRedirect = null
         if (this.props.isAuthenticated){
             authRedirect = <Redirect to={this.props.authRedirectPath}/>
         }
-
+        let errorMessage = null
         if(this.props.auth.error){
-            errorMessage = this.props.auth.error.email
+            const errorArray = handleErrorHandler(this.props.auth.error)
+           errorMessage =  errorArray.map((error, index)=> {
+                return <p key={index}>{error}</p>
+            })
         }
         return(
             <div className={classes.Auth}>
                 {authRedirect}
-                {errorMessage}
+                <p>{errorMessage}</p>
                 <form onSubmit={this.submitHandler}>
                     { form }
                     <Button btnType="Success" type="submit"> SUBMIT </Button>

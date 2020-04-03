@@ -7,6 +7,7 @@ import Spinner from '../../components/UI/Spinner/Spinner'
 import { updateObject, checkValidity} from '../../shared/utility'
 import { connect } from 'react-redux'
 import * as actions from '../../store/actions/index'
+import {handleErrorHandler} from '../../shared/utility'
 
 class Auth extends React.Component{
     state = {
@@ -107,10 +108,11 @@ class Auth extends React.Component{
         }
 
         let errorMessage = null
-        if(this.props.error) {
-            errorMessage = ( 
-                <p>Incorrect Credentials</p>
-            )
+        if(this.props.auth.error){
+            const errorArray = handleErrorHandler(this.props.auth.error)
+           errorMessage =  errorArray.map((error, index)=> {
+                return <p key={index}>{error}</p>
+            })
         }
         let authRedirect = null
         if (this.props.auth.token !== null){
@@ -134,13 +136,14 @@ class Auth extends React.Component{
 }
 const mapStateToProps = state => {
     return {
-        auth : state.auth
+        auth : state.auth,
+        error: state.auth.error
     }
 }
 const mapDispatchToProps = dispatch => {
     return {
         onLogin: (email ,password) => { dispatch(actions.login(email, password))},
-        onSetAuthRedirectPath: () => dispatch(actions.setAuthRedirectPath('/'))
+        onSetAuthRedirectPath: () => dispatch(actions.setAuthRedirectPath('/')),
     }
 }
 

@@ -2,22 +2,27 @@ import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import Spinner from '../../components/UI/Spinner/Spinner'
 import { Redirect } from 'react-router'
+import ProfileCard from '../../components/ProfileCard/ProfileCard'
 import * as actions from '../../store/actions/index'
 
 class Profile extends Component {
    componentDidMount(){
-       console.log(this.props.userId)
-       console.log(this.props.userData)
        this.props.getUserFavoritePokemon(this.props.userId)
    }
     render(){
         let content = <Spinner/>
-        if(!this.props.userId){
-           content =  <Redirect to="/login" />
+        console.log(this.props.isAuth)
+        let isAuthenticated = null
+        if(!this.props.isAuth){
+           isAuthenticated =  <Redirect to="/login" />
+        }
+        if(!this.props.loading){
+            content = <ProfileCard email={this.props.userData.email} first_name={this.props.userData.first_name} last_name={this.props.userData.last_name} username={this.props.userData.email}/>
         }
 
         return(
             <div>
+                {isAuthenticated}
                 {content}
                 {this.props.userId}
             </div>
@@ -25,10 +30,11 @@ class Profile extends Component {
     }
 }
 
-const mapStateToProps = (state) =>{
+const mapStateToProps = state => {
     return {
-        userId : state.auth.userId,
-        userData : state.auth.userData,
+        userData: state.auth.userData,
+        loading: state.auth.loading,
+        isAuth: state.auth.token !== null
     }
 }
 
