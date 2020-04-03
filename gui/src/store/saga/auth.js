@@ -3,7 +3,7 @@ import * as actions from "../actions/index";
 import axios from "../../axios/auth";
 
 export function* checkAuthTimeoutSaga(action) {
-  yield delay(action.expirationTime * 1000)
+  yield delay(action.expirationTime * 1000);
   yield put(actions.logoutSuccess());
 }
 
@@ -19,7 +19,9 @@ export function* authCheckState() {
   if (!token) {
     put(actions.logout());
   } else {
-    const expirationDate = yield new Date(localStorage.getItem("expirationDate"));
+    const expirationDate = yield new Date(
+      localStorage.getItem("expirationDate")
+    );
     if (expirationDate <= new Date()) {
       put(actions.logout());
     } else {
@@ -34,25 +36,61 @@ export function* authCheckState() {
   }
 }
 
-export function* loginUserSaga(action){
-    yield put(actions.authStart());
-    const authData = {
-      username: "",
-      email: action.email,
-      password: action.password
-    };
-    let url = "login/";
-    try{
-      const res = yield axios.post(url, authData)
-      const expirationDate = new Date(new Date().getTime() + 3600 * 1000);
+export function* loginUserSaga(action) {
+  yield put(actions.authStart());
+  const authData = {
+    username: "",
+    email: action.email,
+    password: action.password,
+  };
+  let url = "login/";
+  try {
+    const res = yield axios.post(url, authData);
+    const expirationDate = new Date(new Date().getTime() + 3600 * 1000);
 
-        localStorage.setItem("token", res.data.key);
-        localStorage.setItem("expirationDate", expirationDate);
-        localStorage.setItem("userId", action.email);
-        // dispatch(getUserCredetials(authData))
-        yield put(actions.authSuccess(res.data.key, action.email));
-        yield put(actions.checkAuthTimeout(3600));
-    }catch(error){
-      yield put(actions.authFail(error.response.data));
-    }
+    localStorage.setItem("token", res.data.key);
+    localStorage.setItem("expirationDate", expirationDate);
+    localStorage.setItem("userId", action.email);
+    // dispatch(getUserCredetials(authData))
+    yield put(actions.authSuccess(res.data.key, action.email));
+    yield put(actions.checkAuthTimeout(3600));
+  } catch (error) {
+    yield put(actions.authFail(error.response.data));
+  }
+}
+
+export function* signupUserSaga(action) {
+  yield put(actions.authStart());
+  // Headers
+  const config = {
+    headers: {
+      "Content-Type": "application/json",
+    },
+  };
+  const username = action.username
+  const email = action.email
+  const password1 = action.password1
+  const password2 = action.password2
+  const authData = {
+    username: action.username,
+    email: action.email,
+    password1: action.password1,
+    password2: action.password2,
+  };
+  // Request Body
+  const body = JSON.stringify({username, email, password1, password2 });
+  console.log(config);
+  console.log(body);
+  let url = "registration/";
+  try {
+    const res = yield axios.post(url, body, config);
+    const expirationDate = new Date(new Date().getTime() + 3600 * 1000);
+    localStorage.setItem("token", res.data.key);
+    localStorage.setItem("expirationDate", expirationDate);
+    localStorage.setItem("userId", action.email);
+    yield put(actions.authSuccess(res.data.key, action.email));
+    yield put(actions.checkAuthTimeout(3600));
+  } catch (error) {
+    yield put(actions.authFail(error.response.data));
+  }
 }

@@ -23,5 +23,5 @@ export {
     authFail,
     authSuccess,
     checkAuthTimeout,
-    authStart
+    authStart,
 } from './auth'

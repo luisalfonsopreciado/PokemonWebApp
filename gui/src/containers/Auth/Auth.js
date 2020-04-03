@@ -116,8 +116,10 @@ class Auth extends React.Component{
         if (this.props.auth.token !== null){
             authRedirect = <Redirect to={this.props.auth.authRedirectPath}/>
         }
+
         return(
             <div className={classes.Auth}>
+                
                 {authRedirect}
                 {errorMessage}
                 <form onSubmit={this.submitHandler}>

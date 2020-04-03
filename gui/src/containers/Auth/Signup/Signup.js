@@ -97,11 +97,13 @@ class Auth extends React.Component{
 
     submitHandler = (event) =>{
         event.preventDefault()
+        console.log("SUBMIT")
         const email = this.state.controls.email.value
         const username = this.state.controls.username.value
         const password1 = this.state.controls.password1.value
         const password2 = this.state.controls.password2.value
-        this.props.onSignup(email, username, password1, password2)
+        this.props.onSignup(username, email, password1, password2)
+
     }
 
     switchAuthModeHandler = () =>{
@@ -146,14 +148,18 @@ class Auth extends React.Component{
         if (this.props.isAuthenticated){
             authRedirect = <Redirect to={this.props.authRedirectPath}/>
         }
+
+        if(this.props.auth.error){
+            errorMessage = this.props.auth.error.email
+        }
         return(
             <div className={classes.Auth}>
                 {authRedirect}
                 {errorMessage}
                 <form onSubmit={this.submitHandler}>
                     { form }
-                    <Button btnType="Success"> SUBMIT </Button>
-                    <Button btnType="Danger" clicked={this.switchAuthModeHandler}> { this.state.isSignup ? 'SIGN IN' : 'SIGNUP' } </Button>
+                    <Button btnType="Success" type="submit"> SUBMIT </Button>
+                    <Button btnType="Danger" clicked={this.switchAuthModeHandler}> LOGIN </Button>
                 </form>
                 
             </div>

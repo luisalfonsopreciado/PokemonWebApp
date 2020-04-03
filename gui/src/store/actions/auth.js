@@ -44,37 +44,13 @@ export const logout = () => {
 };
 
 export const signup = (username, email, password1, password2) => {
-  return dispatch => {
-    dispatch(authStart());
-    // Headers
-    const config = {
-      headers: {
-        "Content-Type": "application/json"
-      }
-    };
-    const authData = {
-      "username": username,
-      "email": email,
-      "password1": password1,
-      "password2": password2
-    };
-    console.log(authData)
-    let url = "registration/";
-    axios
-      .post(url, authData, config)
-      .then(res => {
-        const expirationDate = new Date(new Date().getTime() + 3600 * 1000);
-
-        localStorage.setItem("token", res.data.key);
-        localStorage.setItem("expirationDate", expirationDate);
-        localStorage.setItem("userId", email);
-        dispatch(authSuccess(res.data.key, email));
-        dispatch(checkAuthTimeout(3600));
-      })
-      .catch(err => {
-        dispatch(authFail(err));
-      });
-  };
+  return {
+    type: actionTypes.AUTH_USER_SIGNUP,
+    username: username,
+    email: email,
+    password1: password1,
+    password2: password2,
+  }
 };
 
 // export const signupSuccess= () => {

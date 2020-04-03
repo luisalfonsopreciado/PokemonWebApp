@@ -1,7 +1,7 @@
 import { takeEvery } from "redux-saga/effects";
 import * as actionTypes from "../actions/actionTypes";
 import { fetchPokemonByIdSaga, getUserFavoritePokemonSaga, fetchPokemonListSaga} from './pokemon'
-import { checkAuthTimeoutSaga, logoutSaga, loginUserSaga, authCheckState } from './auth'
+import { checkAuthTimeoutSaga, logoutSaga, loginUserSaga, authCheckState, signupUserSaga } from './auth'
 
 export function* watchPokemon() {
   yield takeEvery(actionTypes.FETCH_POKEMON_BY_ID, fetchPokemonByIdSaga);
@@ -13,6 +13,6 @@ export function* watchAuth(){
     yield takeEvery(actionTypes.AUTH_USER_LOGOUT, logoutSaga);
     yield takeEvery(actionTypes.AUTH_LOGIN, loginUserSaga);
     yield takeEvery(actionTypes.AUTH_CHECK_STATE, authCheckState)
-
+    yield takeEvery(actionTypes.AUTH_USER_SIGNUP, signupUserSaga)
     
 }
