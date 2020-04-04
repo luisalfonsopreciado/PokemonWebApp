@@ -12,6 +12,7 @@ export {
     getUserFavoritePokemonFailed,
     fetchPokemonSuccess,
     fetchPokemonFailed, 
+    addPokemonToApi,
 } from './pokemon'
 export {
     login,

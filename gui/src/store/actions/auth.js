@@ -16,7 +16,7 @@ export const authSuccess = (token, userData) => {
 
 export const checkAuthTimeout = expirationTime => {
  return {
-   type : actionTypes.CHECK_AUTH_TIMEOUT,
+   type : actionTypes.AUTH_CHECK_TIMEOUT,
    expirationTime: expirationTime,
 
  }
@@ -63,7 +63,7 @@ export const login = (email, password) => {
 
 export const setAuthRedirectPath = path => {
   return {
-    type: actionTypes.SET_AUTH_REDIRECT_PATH,
+    type: actionTypes.AUTH_SET_REDIRECT_PATH,
     path: path
   };
 };

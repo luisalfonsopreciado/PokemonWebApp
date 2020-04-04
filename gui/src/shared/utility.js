@@ -31,3 +31,17 @@ export const handleErrorHandler = (error) => {
     }
     return Message
 }
+
+export const createHTTPHeaders = (token) => {
+     // Headers
+  const config = {
+    headers: {
+      "Content-Type": "application/json",
+    },
+  };
+  // If token, add to headers config
+  if (token) {
+    config.headers["Authorization"] = `Token ${token}`;
+  }
+  return config
+}

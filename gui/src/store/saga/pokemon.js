@@ -2,11 +2,12 @@ import { put } from "redux-saga/effects";
 import * as actions from "../actions/index";
 import axios from "../../axios/axios";
 import axiosUsers from "../../axios/users";
+import { createHTTPHeaders } from '../../shared/utility'
 
 export function* fetchPokemonByIdSaga(action) {
   try {
     const res = yield axios.get(action.id);
-    const types = yield res.data.types.map(type => type.type.name);
+    const types = yield res.data.types.map((type) => type.type.name);
     const pokemon = {
       abilities: res.data.abilities,
       base_experience: res.data.base_experience,
@@ -20,7 +21,7 @@ export function* fetchPokemonByIdSaga(action) {
       imageURL:
         "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/" +
         res.data.id +
-        ".png"
+        ".png",
     };
     yield put(actions.fetchPokemonByIdSuccess(pokemon));
   } catch (error) {
@@ -29,13 +30,12 @@ export function* fetchPokemonByIdSaga(action) {
 }
 
 export function* getUserFavoritePokemonSaga(action) {
-  console.log(action.userId)
+  console.log(action.userId);
 
   // Headers
   const config = {
     headers: {
       "Content-Type": "application/json",
-      
     },
   };
   // If token, add to headers config
@@ -45,7 +45,7 @@ export function* getUserFavoritePokemonSaga(action) {
   const url = "user-favorite/" + action.userId + "/";
   try {
     const res = yield axiosUsers.get(url);
-    console.log(res.data.pokemon)
+    console.log(res.data.pokemon);
     yield put(actions.getUserFavoritePokemonSuccess(res.data.pokemon));
   } catch (error) {
     yield put(actions.getUserFavoritePokemonFailed(error));
@@ -67,4 +67,36 @@ export function* fetchPokemonListSaga(action) {
   } catch (error) {
     yield put(actions.fetchPokemonFailed());
   }
+}
+
+export function* addPokemonToApiSaga(action) {
+  const config = createHTTPHeaders(action.token)
+  try {
+    const pokemon = {
+      idNum: action.id,
+      name: action.name,
+    };
+    const url = "pokemon/";
+    const response = yield axiosUsers.post(url, pokemon, config);
+    console.log(response.data);
+  } catch (error) {
+      
+  }
+}
+
+export function* addPokemonToUserFavoriteSaga(action){
+  const pokemon = {
+    idNum: action.id,
+    name: action.name,
+  }
+  const url = "user-favorite/" + action.userId;
+  const config = createHTTPHeaders(action.token)
+  try {   
+    const response = yield axiosUsers.post(url, pokemon, config);
+    console.log(response.data);
+  } catch (error) {
+      
+  }
+
+
 }

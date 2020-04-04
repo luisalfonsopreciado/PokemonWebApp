@@ -6,7 +6,7 @@ class CustomUser(AbstractUser):
     pass
 
 class Pokemon(models.Model):
-    idNum = models.IntegerField(default=0)
+    idNum = models.IntegerField(primary_key=True)
     name = models.CharField(max_length=120, default="")
 
 
@@ -14,8 +14,8 @@ class Pokemon(models.Model):
         return self.name
 
 class UserFavoritePokemon(models.Model):
-    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
-    pokemon = models.ManyToManyField(Pokemon)
+    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
+    pokemon = models.ManyToManyField(Pokemon, blank=True)
 
     def __str__(self):
         return self.user.email

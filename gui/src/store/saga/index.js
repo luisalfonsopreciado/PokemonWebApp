@@ -4,6 +4,7 @@ import {
   fetchPokemonByIdSaga,
   getUserFavoritePokemonSaga,
   fetchPokemonListSaga,
+  addPokemonToApiSaga,
 } from "./pokemon";
 import {
   checkAuthTimeoutSaga,
@@ -21,9 +22,13 @@ export function* watchPokemon() {
     getUserFavoritePokemonSaga
   );
   yield takeEvery(actionTypes.FETCH_POKEMON_LIST, fetchPokemonListSaga);
+  yield takeEvery(
+    actionTypes.ADD_POKEMON_USER_FAVORITE,
+    addPokemonToApiSaga
+  );
 }
 export function* watchAuth() {
-  yield takeEvery(actionTypes.CHECK_AUTH_TIMEOUT, checkAuthTimeoutSaga);
+  yield takeEvery(actionTypes.AUTH_CHECK_TIMEOUT, checkAuthTimeoutSaga);
   yield takeEvery(actionTypes.AUTH_USER_LOGOUT, logoutSaga);
   yield takeEvery(actionTypes.AUTH_LOGIN, loginUserSaga);
   yield takeEvery(actionTypes.AUTH_CHECK_STATE, authCheckState);
