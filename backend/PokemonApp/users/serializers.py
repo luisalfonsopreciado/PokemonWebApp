@@ -23,3 +23,4 @@ class UserFavoritePokemonSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserFavoritePokemon
         fields = ('pokemon','user')
+    
