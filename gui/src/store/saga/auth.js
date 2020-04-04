@@ -27,7 +27,7 @@ export function* authCheckState() {
     } else {
       // const userId = localStorage.getItem("userId");
       // yield put(actions.authSuccess(token, userId));
-      yield put(actions.getUserCredentials(token))
+      yield put(actions.getUserCredentials(token));
       yield put(
         actions.checkAuthTimeout(
           (expirationDate.getTime() - new Date().getTime()) / 1000
@@ -73,8 +73,6 @@ export function* signupUserSaga(action) {
   const password2 = action.password2;
   // Request Body
   const body = JSON.stringify({ username, email, password1, password2 });
-  console.log(config);
-  console.log(body);
   let url = "registration/";
   try {
     const res = yield axios.post(url, body, config);
@@ -90,33 +88,29 @@ export function* signupUserSaga(action) {
 }
 
 export function* getUserCredentialsSaga(action) {
-  console.log(action.token);
   // Headers
   const config = {
     headers: {
       "Content-Type": "application/json",
-      
     },
   };
   // If token, add to headers config
   if (action.token) {
     config.headers["Authorization"] = `Token ${action.token}`;
-  }else{
-    yield put(actions.authFail({}))
+  } else {
+    yield put(actions.authFail({}));
   }
-  console.log(config)
 
   try {
     const res = yield axios.get("user/", config);
 
     const userData = {
-        pk : res.data.pk,
-        username: res.data.username,
-        email: res.data.email,
-        first_name: res.data.first_name,
-        last_name: res.data.last_name   
-    }
-    console.log(userData);
+      pk: res.data.pk,
+      username: res.data.username,
+      email: res.data.email,
+      first_name: res.data.first_name,
+      last_name: res.data.last_name,
+    };
 
     yield put(actions.authSuccess(action.token, userData));
   } catch (error) {

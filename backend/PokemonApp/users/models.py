@@ -6,8 +6,9 @@ class CustomUser(AbstractUser):
     pass
 
 class Pokemon(models.Model):
-    idNumber= models.IntegerField()
-    name= models.CharField(max_length=120)
+    idNum = models.IntegerField(default=0)
+    name = models.CharField(max_length=120, default="")
+
 
     def __str__(self):
         return self.name

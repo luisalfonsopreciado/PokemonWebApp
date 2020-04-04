@@ -1,5 +1,6 @@
 .Container{
     width: 400px;
+    display: inline-block;
     height: 500px;
     margin: 40px 10px;
     background-color: white;

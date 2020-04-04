@@ -14,7 +14,7 @@ class PokemonViewSet(viewsets.ModelViewSet):
 
 class UserFavoritePokemonViewSet(viewsets.ModelViewSet):
     queryset = UserFavoritePokemon.objects.all()
-    permission_classes = [IsOwnerOrReadOnly]
+    permission_classes = [IsAuthenticatedOrReadOnly]
     serializer_class = UserFavoritePokemonSerializer
 
 class CustomUserViewSet(viewsets.ModelViewSet):

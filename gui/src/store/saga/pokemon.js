@@ -6,7 +6,7 @@ import axiosUsers from "../../axios/users";
 export function* fetchPokemonByIdSaga(action) {
   try {
     const res = yield axios.get(action.id);
-    const types = res.data.types.map(type => type.type.name);
+    const types = yield res.data.types.map(type => type.type.name);
     const pokemon = {
       abilities: res.data.abilities,
       base_experience: res.data.base_experience,
@@ -29,9 +29,24 @@ export function* fetchPokemonByIdSaga(action) {
 }
 
 export function* getUserFavoritePokemonSaga(action) {
+  console.log(action.userId)
+
+  // Headers
+  const config = {
+    headers: {
+      "Content-Type": "application/json",
+      
+    },
+  };
+  // If token, add to headers config
+  if (action.token) {
+    config.headers["Authorization"] = `Token ${action.token}`;
+  }
+  const url = "user-favorite/" + action.userId + "/";
   try {
-    const res = yield axiosUsers.get("user-favorite/" + action.id);
-    yield put(actions.getUserFavoritePokemonSuccess(res.data));
+    const res = yield axiosUsers.get(url);
+    console.log(res.data.pokemon)
+    yield put(actions.getUserFavoritePokemonSuccess(res.data.pokemon));
   } catch (error) {
     yield put(actions.getUserFavoritePokemonFailed(error));
   }
@@ -42,7 +57,6 @@ export function* fetchPokemonListSaga(action) {
     const response = yield axios.get(
       "/?offset=" + action.offset + "&limit=" + action.limit
     );
-    console.log(response.data.results)
     yield put(
       actions.fetchPokemonSuccess(
         response.data.results,

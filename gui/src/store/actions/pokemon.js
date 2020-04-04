@@ -53,10 +53,11 @@ export const removePokemonFromState = () => {
   };
 };
 
-export const getUserFavoritePokemon = id => {
+export const getUserFavoritePokemon = (userId, token) => {
   return{
     type: actions.FETCH_POKEMON_BY_USER_FAVORITE,
-    id: id,
+    userId: userId,
+    token: token,
   }
 };
 

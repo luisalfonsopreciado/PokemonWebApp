@@ -22,11 +22,9 @@ class PokeList extends Component{
 
     onViewModal = (pokemon) =>{
         this.props.onQuickViewPokemon(pokemon)
-        // this.setState({displayModal: true})
     }
     onRemoveModal = () =>{
         this.props.onRemoveModal()
-        // this.setState({displayModal: false})
     }
 
     render(){

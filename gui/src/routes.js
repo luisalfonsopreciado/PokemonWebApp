@@ -1,6 +1,5 @@
 import React from "react";
 import { Route, Switch } from "react-router-dom";
-import Pokemon from "./components/Pokemon/Pokemon";
 import asyncComponent from "./hoc/asyncComponent/asyncComponent";
 import Logout from "./containers/Auth/Logout/Logout";
 
@@ -16,6 +15,9 @@ const asyncSignup = asyncComponent(() => {
 const asyncProfile = asyncComponent(() => {
   return import("./containers/Profile/Profile");
 });
+const asyncPokemon = asyncComponent(() => {
+  return import("./components/Pokemon/Pokemon");
+});
 
 const BaseRouter = () => (
   <React.Fragment>
@@ -24,7 +26,7 @@ const BaseRouter = () => (
       <Route exact path="/login" component={asyncAuth} />
       <Route exact path="/logout" component={Logout} />
       <Route exact path="/signup" component={asyncSignup} />
-      <Route exact path="/pokemon/:id" component={Pokemon} />
+      <Route exact path="/pokemon/:id" component={asyncPokemon} />
       <Route exact path="/profile" component={asyncProfile} />
     </Switch>
   </React.Fragment>
