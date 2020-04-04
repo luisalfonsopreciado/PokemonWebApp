@@ -71,32 +71,52 @@ export function* fetchPokemonListSaga(action) {
 
 export function* addPokemonToApiSaga(action) {
   const config = createHTTPHeaders(action.token)
-  try {
-    const pokemon = {
-      idNum: action.id,
-      name: action.name,
-    };
-    const url = "pokemon/";
-    const response = yield axiosUsers.post(url, pokemon, config);
-    console.log(response.data);
-  } catch (error) {
-      
-  }
-}
-
-export function* addPokemonToUserFavoriteSaga(action){
   const pokemon = {
     idNum: action.id,
     name: action.name,
-  }
-  const url = "user-favorite/" + action.userId;
-  const config = createHTTPHeaders(action.token)
-  try {   
+  };
+  try {
+    
+    const url = "pokemon/";
     const response = yield axiosUsers.post(url, pokemon, config);
-    console.log(response.data);
+    console.log(response)
+    // addPokemonToUserFavoriteSaga(action)
   } catch (error) {
       
   }
-
-
+    try{
+    const url = "user-favorite/" + action.userId + "/";
+    const response = yield axiosUsers.get(url)
+    const state = response.data
+    const finalFav = {
+      ...state,
+      pokemon : [
+        ...state.pokemon,
+        pokemon,
+      ]
+    }
+    console.log(finalFav)
+    const response2 = yield axiosUsers.put(url, finalFav, config);
+    console.log(response2)
+  } catch(error){
+    console.log(error)
+  }
 }
+
+// export function* addPokemonToUserFavoriteSaga(action){
+//   const pokemon = {
+//     idNum: action.id,
+//     name: action.name,
+//   }
+//   console.log(pokemon)
+  
+//   const config = createHTTPHeaders(action.token)
+//   try {   
+   
+//     console.log(response.data);
+//   } catch (error) {
+      
+//   }
+
+
+// }

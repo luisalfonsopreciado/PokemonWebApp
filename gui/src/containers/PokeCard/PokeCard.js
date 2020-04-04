@@ -5,6 +5,7 @@ import styled from "styled-components";
 import Button from "../../components/UI/Button/Button";
 import { connect } from "react-redux";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { withRouter } from "react-router";
 import { faStar } from "@fortawesome/free-solid-svg-icons";
 import * as actions from "../../store/actions/index";
 
@@ -33,7 +34,13 @@ class PokeCard extends React.Component {
   }
 
   starClickedHandler = (id, name) => {
-    this.props.addUserFavorite(id, name, this.props.token);
+    if(this.props.token){
+      console.log(this.props.userId)
+      this.props.addUserFavorite(id, name, this.props.token, this.props.userId);
+    }else{
+      this.props.history.push('/login')
+    }
+   
   };
 
   render() {
@@ -118,13 +125,14 @@ class PokeCard extends React.Component {
 const mapStateToProps = state => {
   return {
     token : state.auth.token,
+    userId : state.auth.userData.pk,
   }
 }
 const mapDispatchToProps = (dispatch) => {
   return {
-    addUserFavorite: (id, name,token) =>
-      dispatch(actions.addPokemonToApi(id, name,token)),
+    addUserFavorite: (id, name,token, userId) =>
+      dispatch(actions.addPokemonToApi(id, name,token, userId)),
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(PokeCard);
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(PokeCard));
