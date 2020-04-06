@@ -5,15 +5,21 @@ import * as actions from "../../store/actions/index";
 import Spinner from "../UI/Spinner/Spinner";
 import CardHeader from "./CardHeader/CardHeader";
 import CardBody from "./CardBody/CardBody";
+import Button from "../UI/Button/Button";
+import { withRouter } from "react-router";
 
 class Pokemon extends Component {
   componentDidMount() {
     this.props.onLoadPokemon(this.props.match.params.id);
   }
 
+  onButtonClickHandler = () =>{
+    this.props.history.push("/")
+  }
+
   render() {
     let card = <Spinner />;
-    let PokemonIsDefined = !this.props.loading && this.props.pkm !== undefined
+    let PokemonIsDefined = !this.props.loading && this.props.pkm !== undefined;
     if (PokemonIsDefined) {
       card = (
         <div className={classes.Card}>
@@ -31,7 +37,12 @@ class Pokemon extends Component {
         </div>
       );
     }
-    return <div className={classes.Pokemon}>{card}</div>;
+    return (
+      <div className={classes.Pokemon}>
+        {card}
+        <Button clicked={this.onButtonClickHandler}>Back</Button>
+      </div>
+    );
   }
 }
 const mapStateToProps = (state) => {
@@ -45,4 +56,7 @@ const mapDispatchToProps = (dispatch) => {
     onLoadPokemon: (id) => dispatch(actions.fetchPokemonById(id)),
   };
 };
-export default connect(mapStateToProps, mapDispatchToProps)(Pokemon);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(withRouter(Pokemon));
