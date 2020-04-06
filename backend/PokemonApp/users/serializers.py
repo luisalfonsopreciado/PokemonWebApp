@@ -6,11 +6,6 @@ class PokemonSerializer(serializers.ModelSerializer):
         model = Pokemon
         fields = '__all__'
 
-# class UserFavoritePokemonSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = UserFavoritePokemon
-#         fields = '__all__'
-
 class CustomUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
@@ -18,9 +13,11 @@ class CustomUserSerializer(serializers.ModelSerializer):
 
 
 class UserFavoritePokemonSerializer(serializers.ModelSerializer):
-    pokemon = PokemonSerializer(many=True, read_only=True)
+    pokemon = PokemonSerializer(many=True, read_only=False)
     user = CustomUser()
     class Meta:
         model = UserFavoritePokemon
         fields = ('pokemon','user')
+    
+
     

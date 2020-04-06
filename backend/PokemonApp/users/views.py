@@ -15,10 +15,10 @@ class PokemonViewSet(viewsets.ModelViewSet):
     serializer_class = PokemonSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
 
-# class UserFavoritePokemonViewSet(viewsets.ModelViewSet):
-#     queryset = UserFavoritePokemon.objects.all()
-#     permission_classes = [IsAuthenticatedOrReadOnly]
-#     serializer_class = UserFavoritePokemonSerializer
+class UserFavoritePokemonViewSet(viewsets.ModelViewSet):
+    queryset = UserFavoritePokemon.objects.all()
+    permission_classes = [IsAuthenticatedOrReadOnly]
+    serializer_class = UserFavoritePokemonSerializer
 
 
 class CustomUserViewSet(viewsets.ModelViewSet):
@@ -26,29 +26,29 @@ class CustomUserViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAdminUser, IsOwnerOrReadOnly]
     serializer_class = CustomUserSerializer
 
-class UserFavoritePokemonDetail(APIView):
-    def get_object(self, pk):
-        try:
-            return UserFavoritePokemon.objects.get(user=pk)
-        except UserFavoritePokemon.DoesNotExist:
-            raise Http404
+# class UserFavoritePokemonDetail(APIView):
+#     def get_object(self, pk):
+#         try:
+#             return UserFavoritePokemon.objects.get(user=pk)
+#         except UserFavoritePokemon.DoesNotExist:
+#             raise Http404
     
-    def put(self, request, pk, format=None):
-        user_favorite = self.get_object(pk)
-        serializer = UserFavoritePokemonSerializer(user_favorite, data=request.data)
-        data = {}
-        if serializer.is_valid():
-            result = serializer.save()
-            print(result)
-            data["Success"] = "update success"
-            user_favorite.save()
-            return Response(data=data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+#     def put(self, request, pk, format=None):
+#         user_favorite = self.get_object(pk)
+#         serializer = UserFavoritePokemonSerializer(user_favorite, data=request.data)
+#         data = {}
+#         if serializer.is_valid():
+#             result = serializer.save()
+#             print(result)
+#             data["Success"] = "update success"
+#             user_favorite.save()
+#             return Response(data=data)
+#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def get(self, request, pk, format=None):
-        user_favorite = self.get_object(pk)
-        serializer = UserFavoritePokemonSerializer(user_favorite)
-        return Response(serializer.data)
+#     def get(self, request, pk, format=None):
+#         user_favorite = self.get_object(pk)
+#         serializer = UserFavoritePokemonSerializer(user_favorite)
+#         return Response(serializer.data)
 
     
 # @api_view(['GET', 'PUT'])
