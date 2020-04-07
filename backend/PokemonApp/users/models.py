@@ -9,7 +9,6 @@ class Pokemon(models.Model):
     idNum = models.IntegerField(primary_key=True)
     name = models.CharField(max_length=120, default="")
 
-
     def __str__(self):
         return self.name
 
