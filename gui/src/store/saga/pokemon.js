@@ -96,7 +96,7 @@ export function* addPokemonToApiSaga(action) {
       ]
     }
     console.log(finalFav)
-    const response2 = yield axiosUsers.put(url, finalFav, config);
+    const response2 = yield axiosUsers.patch(url, finalFav, config);
     console.log(response2)
   } catch(error){
     console.log(error)
