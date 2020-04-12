@@ -1,0 +1,21 @@
+{
+  "name": "poke-api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "nodemon src/index.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "mongodb": "^3.5.5",
+    "mongoose": "^5.9.7",
+    "validatorjs": "^3.18.1"
+  },
+  "devDependencies": {
+    "express": "^4.17.1",
+    "nodemon": "^2.0.3"
+  }
+}
