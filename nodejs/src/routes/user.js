@@ -3,14 +3,51 @@ const router = new express.Router();
 const User = require("../models/User.js");
 const auth = require("../middleware/auth")
 
-router.get("/users", auth, async (req, res) => {
+router.get("/users/me", auth, async (req, res) => {
   try {
-    const user = await User.find({});
+    const user = await User.findOne({_id: req.user._id});
     res.status(200).send(user);
   } catch (e) {
     res.status(500).send();
   }
 });
+
+router.post("/users/me", auth, async (req, res) => {
+  try {
+    await User.findOneAndDelete({_id: req.user._id});
+    res.status(200).send("User Deleted Successfully");
+  } catch (e) {
+    res.status(500).send();
+  }
+});
+
+router.patch("/users/me", auth, async (req, res) => {
+  const updates = Object.keys(req.body)
+  const allowedUpdates = ["username", "email"]
+  const isValidOperation = updates.every(update=> allowedUpdates.includes(update))
+  if(!isValidOperation){
+    res.status(400).send({error: "Invalid Updates"})
+  }
+  try {
+    updates.forEach(update=> req.user[update] = req.body[update])
+    await req.user.save()
+    res.status(200).send(req.user);
+  } catch (e) {
+    res.status(500).send();
+  }
+});
+
+router.post("/users/logout",auth, async(req,res) => {
+  try{
+    req.user.tokens = req.user.tokens.filter(
+      (token) => token.token !== req.token
+    );
+    await req.user.save();
+    res.send("Logged out successfully")
+  }catch(e){
+    res.status(500).send()
+  }
+})
 
 router.post("/users/login", async (req, res) => {
   try {
