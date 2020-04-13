@@ -12,7 +12,7 @@
   "dependencies": {
     "mongodb": "^3.5.5",
     "mongoose": "^5.9.7",
-    "validatorjs": "^3.18.1"
+    "validator": "^13.0.0"
   },
   "devDependencies": {
     "express": "^4.17.1",
