@@ -19,7 +19,16 @@ router.post("/pokemon/create", async(req,res)=> {
     }catch(e){
         res.status(400).send()
     }
+})
 
+router.delete("/pokemon/delete", async(req,res)=> {
+
+    try{
+        await Pokemon.findOneAndDelete({name: req.body.name})
+        res.send("Pokemon Deleted Successfully")
+    }catch(e){
+        res.status(400).send()
+    }
 })
 
 module.exports = router

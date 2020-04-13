@@ -12,9 +12,9 @@ router.get("/users/me", auth, async (req, res) => {
   }
 });
 
-router.post("/users/me", auth, async (req, res) => {
+router.delete("/users/me", auth, async (req, res) => {
   try {
-    await User.findOneAndDelete({_id: req.user._id});
+    await req.user.remove()
     res.status(200).send("User Deleted Successfully");
   } catch (e) {
     res.status(500).send();
