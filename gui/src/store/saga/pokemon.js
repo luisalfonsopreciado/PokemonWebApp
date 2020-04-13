@@ -40,13 +40,14 @@ export function* getUserFavoritePokemonSaga(action) {
   };
   // If token, add to headers config
   if (action.token) {
-    config.headers["Authorization"] = `Token ${action.token}`;
+    config.headers["Authorization"] = `Bearer ${action.token}`;
   }
-  const url = "user-favorite/" + action.userId + "/";
+  console.log(config)
+  const url = "favorite";
   try {
-    const res = yield axiosUsers.get(url);
-    console.log(res.data.pokemon);
-    yield put(actions.getUserFavoritePokemonSuccess(res.data.pokemon));
+    const res = yield axiosUsers.get(url, config);
+    console.log(res.data);
+    yield put(actions.getUserFavoritePokemonSuccess(res.data));
   } catch (error) {
     yield put(actions.getUserFavoritePokemonFailed(error));
   }

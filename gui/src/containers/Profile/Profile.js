@@ -79,8 +79,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    getUserFavoritePokemon: (userId) =>
-      dispatch(actions.getUserFavoritePokemon(userId)),
+    getUserFavoritePokemon: (userId, token) =>
+      dispatch(actions.getUserFavoritePokemon(userId, token)),
     onQuickViewPokemon: (pokemon) =>
       dispatch(actions.addPokemonToState(pokemon)),
     onRemoveModal: () => dispatch(actions.removePokemonFromState()),
