@@ -12,6 +12,14 @@ router.get("/users", async(req, res) => {
 
 })
 
+router.put("/users/login", async(req, res)=> {
+    try{
+        const user = User.find({email: req.body.email})
+    }catch(e){
+
+    }
+})
+
 router.post("/users/create", async(req, res)=> {
     try{
         const user = await User.create(req.body)
