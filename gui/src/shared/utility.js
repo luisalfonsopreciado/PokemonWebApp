@@ -41,7 +41,7 @@ export const createHTTPHeaders = (token) => {
   };
   // If token, add to headers config
   if (token) {
-    config.headers["Authorization"] = `Token ${token}`;
+    config.headers["Authorization"] = `Bearer ${token}`;
   }
   return config
 }

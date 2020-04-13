@@ -2,6 +2,7 @@ import { put } from "redux-saga/effects";
 import * as actions from "../actions/index";
 import axios from "../../axios/axios";
 import axiosUsers from "../../axios/users";
+import axiosPokemon from "../../axios/pokemon"
 import { createHTTPHeaders } from '../../shared/utility'
 
 export function* fetchPokemonByIdSaga(action) {
@@ -73,31 +74,32 @@ export function* fetchPokemonListSaga(action) {
 export function* addPokemonToApiSaga(action) {
   const config = createHTTPHeaders(action.token)
   const pokemon = {
-    idNum: action.id,
+    pokemonId: action.id,
     name: action.name,
   };
   try {
     
-    const url = "pokemon/";
-    const response = yield axiosUsers.post(url, pokemon, config);
+    const url = "create";
+    const response = yield axiosPokemon.post(url, pokemon, config);
     console.log(response)
     // addPokemonToUserFavoriteSaga(action)
   } catch (error) {
       
   }
     try{
-    const url = "user-favorite/" + action.userId + "/";
-    const response = yield axiosUsers.get(url)
-    const state = response.data
-    const finalFav = {
-      ...state,
-      pokemon : [
-        ...state.pokemon,
-        pokemon,
-      ]
-    }
-    console.log(finalFav)
-    const response2 = yield axiosUsers.patch(url, finalFav, config);
+    const url = "favorite";
+    // const response = yield axiosPokemon.get(url)
+    // const state = response.data
+    // const finalFav = {
+    //   ...state,
+    //   pokemon : [
+    //     ...state.pokemon,
+    //     pokemon,
+    //   ]
+    // }
+    // console.log(finalFav)
+    console.log(config)
+    const response2 = yield axiosUsers.post(url, pokemon, config);
     console.log(response2)
   } catch(error){
     console.log(error)

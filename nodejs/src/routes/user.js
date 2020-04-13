@@ -98,4 +98,16 @@ router.post("/users/favorite", auth, async (req, res) => {
   }
 });
 
+router.delete("/users/favorite", auth, async (req, res) => {
+  try{
+    const isSamePokemon = pokemon => pokemon.name == req.body.name 
+    const index = req.user.favoritePokemons.findIndex(isSamePokemon)
+    req.user.favoritePokemons.splice(index, 1)
+    await req.user.save()
+    res.status(200).send(req.user)
+  } catch(e){
+    res.status(400).send()
+  }
+})
+
 module.exports = router;
