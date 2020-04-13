@@ -12,7 +12,22 @@ const userSchema = new mongoose.Schema({
         trim: true,
         lowercase: true,
         validate(value){
-            if()
+           if(!validator.isEmail(value)) {
+               throw new Error("Invalid Email")
+           }
+        }
+    },
+    password: {
+        type: String,
+        required: true,
+        validate(value){
+            if(value.toLowerCase().includes("password") || value.length < 6){
+                throw new Error("Invalid password")
+            }
         }
     }
 })
+
+const User = mongoose.model("User", userSchema)
+
+module.exports = User
