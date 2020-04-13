@@ -36,9 +36,10 @@ export const logoutSuccess = data => {
   };
 };
 
-export const logout = () => {
+export const logout = (token) => {
   return {
-    type: actionTypes.AUTH_USER_LOGOUT
+    type: actionTypes.AUTH_USER_LOGOUT,
+    token: token,
   }
 };
 

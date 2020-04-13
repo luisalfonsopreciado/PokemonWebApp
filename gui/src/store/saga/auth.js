@@ -7,11 +7,30 @@ export function* checkAuthTimeoutSaga(action) {
   yield put(actions.logoutSuccess());
 }
 
-export function* logoutSaga() {
+export function* logoutSaga(action) {
   localStorage.removeItem("token");
   localStorage.removeItem("expirationDate");
   localStorage.removeItem("userId");
-  yield put(actions.logoutSuccess());
+
+  // Headers
+  const config = {
+    headers: {
+      "Content-Type": "application/json",
+    },
+  };
+  // If token, add to headers config
+  if (action.token) {
+    config.headers["Authorization"] = `Bearer ${action.token}`;
+  } else {
+    yield put(actions.authFail({}));
+  }
+  const url = "logout";
+  try {
+    yield axios.post(url,{}, config);
+    yield put(actions.logoutSuccess());
+  } catch (e) {
+    console.log("Unable to Log Out");
+  }
 }
 
 export function* authCheckState() {
@@ -40,19 +59,18 @@ export function* authCheckState() {
 export function* loginUserSaga(action) {
   yield put(actions.authStart());
   const authData = {
-    username: "",
     email: action.email,
     password: action.password,
   };
-  let url = "login/";
+  let url = "login";
   try {
     const res = yield axios.post(url, authData);
     const expirationDate = new Date(new Date().getTime() + 3600 * 1000);
 
-    localStorage.setItem("token", res.data.key);
+    localStorage.setItem("token", res.data.token);
     localStorage.setItem("expirationDate", expirationDate);
     localStorage.setItem("userId", action.email);
-    yield put(actions.getUserCredentials(res.data.key));
+    yield put(actions.getUserCredentials(res.data.token));
     yield put(actions.checkAuthTimeout(3600));
   } catch (error) {
     yield put(actions.authFail(error.response.data));
@@ -77,10 +95,10 @@ export function* signupUserSaga(action) {
   try {
     const res = yield axios.post(url, body, config);
     const expirationDate = new Date(new Date().getTime() + 3600 * 1000);
-    localStorage.setItem("token", res.data.key);
+    localStorage.setItem("token", res.data.token);
     localStorage.setItem("expirationDate", expirationDate);
     localStorage.setItem("userId", action.email);
-    yield put(actions.authSuccess(res.data.key, action.email));
+    yield put(actions.authSuccess(res.data.token, action.email));
     yield put(actions.checkAuthTimeout(3600));
   } catch (error) {
     yield put(actions.authFail(error.response.data));
@@ -96,20 +114,20 @@ export function* getUserCredentialsSaga(action) {
   };
   // If token, add to headers config
   if (action.token) {
-    config.headers["Authorization"] = `Token ${action.token}`;
+    config.headers["Authorization"] = `Bearer ${action.token}`;
   } else {
     yield put(actions.authFail({}));
   }
 
   try {
-    const res = yield axios.get("user/", config);
+    const res = yield axios.get("me", config);
 
     const userData = {
-      pk: res.data.pk,
+      pk: res.data._id,
       username: res.data.username,
       email: res.data.email,
-      first_name: res.data.first_name,
-      last_name: res.data.last_name,
+      first_name: "",
+      last_name: "",
     };
 
     yield put(actions.authSuccess(action.token, userData));

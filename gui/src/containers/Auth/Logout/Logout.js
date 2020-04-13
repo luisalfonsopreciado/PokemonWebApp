@@ -5,7 +5,7 @@ import {connect} from 'react-redux'
 
 class Logout extends Component {
     componentDidMount() {
-        this.props.onLogout()
+        this.props.onLogout(this.props.token)
     }
     render() {
         return (
@@ -14,9 +14,15 @@ class Logout extends Component {
     }
 }
 
-const mapDispatchToProps = dispatch => {
+const mapStateToProps = state => {
     return {
-        onLogout: () => dispatch(actions.logout())
+        token : state.auth.token
     }
 }
-export default connect(null, mapDispatchToProps)(Logout);
+
+const mapDispatchToProps = dispatch => {
+    return {
+        onLogout: (token) => dispatch(actions.logout(token))
+    }
+}
+export default connect(mapStateToProps, mapDispatchToProps)(Logout);
