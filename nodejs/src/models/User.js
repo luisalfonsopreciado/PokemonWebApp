@@ -65,7 +65,7 @@ userSchema.methods.generateAuthToken = async function () {
   return token;
 };
 userSchema.statics.findByCredentials = async function (email, password) {
-  const user = User.findOne({ email });
+  const user = await User.findOne({ email });
   if(!user){
       throw new Error("Incorrect Credentials")
   }
