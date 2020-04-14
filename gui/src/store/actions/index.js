@@ -13,6 +13,7 @@ export {
     fetchPokemonSuccess,
     fetchPokemonFailed, 
     addPokemonToApi,
+    removePokemonFromApi,
 } from './pokemon'
 export {
     login,

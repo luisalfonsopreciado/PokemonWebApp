@@ -33,12 +33,20 @@ class PokeCard extends React.Component {
     });
   }
 
-  starClickedHandler = (id, name) => {
-    if(this.props.token){
+  addToFavoriteHandler = (id, name) => {
+    if (this.props.token) {
       this.props.addUserFavorite(id, name, this.props.token);
-    }else{
-      this.props.history.push('/login')
-    } 
+    } else {
+      this.props.history.push("/login");
+    }
+  };
+
+  removeFromFavoriteHandler = (id, name) => {
+    if (this.props.token) {
+      this.props.addUserFavorite(id, name, this.props.token);
+    } else {
+      this.props.history.push("/login");
+    }
   };
 
   render() {
@@ -48,12 +56,10 @@ class PokeCard extends React.Component {
         style={{ color: "#ccc", cursor: "pointer" }}
       />
     );
-    if(this.props.isFavorite){
-       element = (
-        <FontAwesomeIcon icon={faStar} style={{ color: "yellow" }} />
-      );
+    if (this.props.isFavorite) {
+      element = <FontAwesomeIcon icon={faStar} style={{ color: "yellow" }} />;
     }
-    
+
     return (
       <div className="col-md-3 col-sm-6 mt-5">
         <div className="card bg-light">
@@ -64,7 +70,10 @@ class PokeCard extends React.Component {
             <h5 style={{ display: "inline-block" }}>{this.state.pokemon.id}</h5>
             <p
               onClick={() =>
-                this.starClickedHandler(this.state.id, this.props.pokemon.name)
+                this.addToFavoriteHandler(
+                  this.state.id,
+                  this.props.pokemon.name
+                )
               }
               className="font-weight-bold"
               style={{ float: "right" }}
@@ -123,16 +132,21 @@ class PokeCard extends React.Component {
     );
   }
 }
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
-    token : state.auth.token,
-  }
-}
+    token: state.auth.token,
+  };
+};
 const mapDispatchToProps = (dispatch) => {
   return {
-    addUserFavorite: (id, name,token) =>
-      dispatch(actions.addPokemonToApi(id, name,token)),
+    addUserFavorite: (id, name, token) =>
+      dispatch(actions.addPokemonToApi(id, name, token)),
+    removeUserFavorite: (id, name, token) =>
+      dispatch(actions.removePokemonFromApi(id, name, token)),
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(withRouter(PokeCard));
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(withRouter(PokeCard));

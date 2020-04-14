@@ -85,7 +85,7 @@ export const previousPokemonPage = (offset, limit) => {
   return fetchPokemonList(newOffset, limit);
 };
 
-export const addPokemonToApi = (id, name, token, userId) => {
+export const addPokemonToApi = (id, name, token) => {
   return {
     type: actions.ADD_POKEMON_USER_FAVORITE,
     id: id,
@@ -93,3 +93,14 @@ export const addPokemonToApi = (id, name, token, userId) => {
     token: token,
   };
 };
+
+export const removePokemonFromApi = (id, name, token) => {
+  return {
+    type: actions.REMOVE_POKEMON_USER_FAVORITE,
+    id: id,
+    name: name,
+    token: token,
+  };
+};
+
+

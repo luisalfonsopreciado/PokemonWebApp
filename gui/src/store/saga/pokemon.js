@@ -84,3 +84,20 @@ export function* addPokemonToApiSaga(action) {
   }
 }
 
+export function* removePokemonFromApiSaga(action) {
+  const config = createHTTPHeaders(action.token)
+  const pokemon = {
+    pokemonId: action.id,
+    name: action.name,
+  }; 
+  
+    try{
+    const url = "favorite";
+    console.log(config)
+    const response2 = yield axiosUsers.delete(url, pokemon, config);
+    console.log(response2)
+  } catch(error){
+    console.log(error)
+  }
+}
+
