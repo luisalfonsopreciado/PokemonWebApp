@@ -9,6 +9,7 @@ import Button from "../UI/Button/Button";
 import { withRouter } from "react-router";
 
 class Pokemon extends Component {
+  
   componentDidMount() {
     this.props.onLoadPokemon(this.props.match.params.id);
   }
@@ -18,12 +19,13 @@ class Pokemon extends Component {
   }
 
   render() {
+    let isFavorite = this.props.userFavoritePokemon.includes(this.props.history.location.pathname.substring(9, 20))
     let card = <Spinner />;
     let PokemonIsDefined = !this.props.loading && this.props.pkm !== undefined;
     if (PokemonIsDefined) {
       card = (
         <div className={classes.Card}>
-          <CardHeader types={this.props.pkm.types} id={this.props.pkm.id} />
+          <CardHeader isFavorite={isFavorite} types={this.props.pkm.types} id={this.props.pkm.id} />
           <CardBody
             name={this.props.pkm.name}
             imageURL={this.props.pkm.imageURL}
@@ -49,6 +51,7 @@ const mapStateToProps = (state) => {
   return {
     pkm: state.pokemon.pokemon,
     loading: state.pokemon.loading,
+    userFavoritePokemon: state.auth.userData.favoritePokemon
   };
 };
 const mapDispatchToProps = (dispatch) => {
