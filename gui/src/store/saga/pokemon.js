@@ -31,23 +31,12 @@ export function* fetchPokemonByIdSaga(action) {
 }
 
 export function* getUserFavoritePokemonSaga(action) {
-  console.log(action.userId);
 
-  // Headers
-  const config = {
-    headers: {
-      "Content-Type": "application/json",
-    },
-  };
-  // If token, add to headers config
-  if (action.token) {
-    config.headers["Authorization"] = `Bearer ${action.token}`;
-  }
-  console.log(config)
+  const config = createHTTPHeaders(action.token)
+ 
   const url = "favorite";
   try {
     const res = yield axiosUsers.get(url, config);
-    console.log(res.data);
     yield put(actions.getUserFavoritePokemonSuccess(res.data));
   } catch (error) {
     yield put(actions.getUserFavoritePokemonFailed(error));
@@ -82,22 +71,11 @@ export function* addPokemonToApiSaga(action) {
     const url = "create";
     const response = yield axiosPokemon.post(url, pokemon, config);
     console.log(response)
-    // addPokemonToUserFavoriteSaga(action)
   } catch (error) {
       
   }
     try{
     const url = "favorite";
-    // const response = yield axiosPokemon.get(url)
-    // const state = response.data
-    // const finalFav = {
-    //   ...state,
-    //   pokemon : [
-    //     ...state.pokemon,
-    //     pokemon,
-    //   ]
-    // }
-    // console.log(finalFav)
     console.log(config)
     const response2 = yield axiosUsers.post(url, pokemon, config);
     console.log(response2)
@@ -106,20 +84,3 @@ export function* addPokemonToApiSaga(action) {
   }
 }
 
-// export function* addPokemonToUserFavoriteSaga(action){
-//   const pokemon = {
-//     idNum: action.id,
-//     name: action.name,
-//   }
-//   console.log(pokemon)
-  
-//   const config = createHTTPHeaders(action.token)
-//   try {   
-   
-//     console.log(response.data);
-//   } catch (error) {
-      
-//   }
-
-
-// }

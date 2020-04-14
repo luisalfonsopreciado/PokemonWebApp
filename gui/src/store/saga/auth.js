@@ -1,6 +1,7 @@
 import { put, delay } from "redux-saga/effects";
 import * as actions from "../actions/index";
 import axios from "../../axios/auth";
+import {createHTTPHeaders }from "../../shared/utility"
 
 export function* checkAuthTimeoutSaga(action) {
   yield delay(action.expirationTime * 1000);
@@ -11,19 +12,11 @@ export function* logoutSaga(action) {
   localStorage.removeItem("token");
   localStorage.removeItem("expirationDate");
   localStorage.removeItem("userId");
-
-  // Headers
-  const config = {
-    headers: {
-      "Content-Type": "application/json",
-    },
-  };
-  // If token, add to headers config
-  if (action.token) {
-    config.headers["Authorization"] = `Bearer ${action.token}`;
-  } else {
+  if (!action.token) {
     yield put(actions.authFail({}));
-  }
+  } 
+  const config = createHTTPHeaders(action.token)
+
   const url = "logout";
   try {
     yield axios.post(url,{}, config);
@@ -44,8 +37,6 @@ export function* authCheckState() {
     if (expirationDate <= new Date()) {
       put(actions.logout());
     } else {
-      // const userId = localStorage.getItem("userId");
-      // yield put(actions.authSuccess(token, userId));
       yield put(actions.getUserCredentials(token));
       yield put(
         actions.checkAuthTimeout(
@@ -79,12 +70,6 @@ export function* loginUserSaga(action) {
 
 export function* signupUserSaga(action) {
   yield put(actions.authStart());
-  // Headers
-  const config = {
-    headers: {
-      "Content-Type": "application/json",
-    },
-  };
   const username = action.username;
   const email = action.email;
   const password1 = action.password1;
@@ -93,7 +78,7 @@ export function* signupUserSaga(action) {
   const body = JSON.stringify({ username, email, password1, password2 });
   let url = "registration/";
   try {
-    const res = yield axios.post(url, body, config);
+    const res = yield axios.post(url, body);
     const expirationDate = new Date(new Date().getTime() + 3600 * 1000);
     localStorage.setItem("token", res.data.token);
     localStorage.setItem("expirationDate", expirationDate);
@@ -106,19 +91,10 @@ export function* signupUserSaga(action) {
 }
 
 export function* getUserCredentialsSaga(action) {
-  // Headers
-  const config = {
-    headers: {
-      "Content-Type": "application/json",
-    },
-  };
-  // If token, add to headers config
-  if (action.token) {
-    config.headers["Authorization"] = `Bearer ${action.token}`;
-  } else {
+   if (!action.token) {
     yield put(actions.authFail({}));
-  }
-
+  } 
+  const config = createHTTPHeaders(action.token)
   try {
     const res = yield axios.get("me", config);
 
