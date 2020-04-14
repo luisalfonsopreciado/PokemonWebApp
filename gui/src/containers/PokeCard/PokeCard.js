@@ -35,8 +35,7 @@ class PokeCard extends React.Component {
 
   starClickedHandler = (id, name) => {
     if(this.props.token){
-      console.log(this.props.userId)
-      this.props.addUserFavorite(id, name, this.props.token, this.props.userId);
+      this.props.addUserFavorite(id, name, this.props.token);
     }else{
       this.props.history.push('/login')
     }
@@ -44,15 +43,18 @@ class PokeCard extends React.Component {
   };
 
   render() {
-    const element = (
+    let element = (
       <FontAwesomeIcon
         icon={faStar}
         style={{ color: "#ccc", cursor: "pointer" }}
       />
     );
-    const favorite = (
-      <FontAwesomeIcon icon={faStar} style={{ color: "yellow" }} />
-    );
+    if(this.props.isFavorite){
+       element = (
+        <FontAwesomeIcon icon={faStar} style={{ color: "yellow" }} />
+      );
+    }
+    
     return (
       <div className="col-md-3 col-sm-6 mt-5">
         <div className="card bg-light">
@@ -125,13 +127,12 @@ class PokeCard extends React.Component {
 const mapStateToProps = state => {
   return {
     token : state.auth.token,
-    userId : state.auth.userData.pk,
   }
 }
 const mapDispatchToProps = (dispatch) => {
   return {
-    addUserFavorite: (id, name,token, userId) =>
-      dispatch(actions.addPokemonToApi(id, name,token, userId)),
+    addUserFavorite: (id, name,token) =>
+      dispatch(actions.addPokemonToApi(id, name,token)),
   };
 };
 

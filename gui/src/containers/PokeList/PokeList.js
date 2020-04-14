@@ -32,6 +32,7 @@ class PokeList extends Component{
         if(this.props.pkm.pokemons){
             PokemonList = this.props.pkm.pokemons.map((pokemon, key) =>{
                 return <PokeCard
+                isFavorite={this.props.favoritePokemonIdArray.includes(pokemon.name)}
                 url={pokemon.url}
                 pokemon={pokemon}
                 key={pokemon.name}
@@ -64,6 +65,7 @@ const mapStateToProp = state =>{
     return{
         pkm : state.pokemon,
         displayModal : state.pokemon.displayModal,
+        favoritePokemonIdArray: state.auth.userData.favoritePokemon,
 
     }
 }

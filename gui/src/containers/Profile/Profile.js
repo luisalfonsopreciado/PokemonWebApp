@@ -48,6 +48,7 @@ class Profile extends Component {
             pokemon={pokemon}
             key={pokemon.name}
             data={pokemon}
+            isFavorite={true}
             showModal={this.onViewModal}
             pokemonSelect={() => this.detailViewHandler(pokemon.name)}
           />

@@ -10,6 +10,7 @@ const initialState = {
   loading: true,
   displayModal: false,
   favoritePokemon: [],
+  favoritePokemonId: [],
 };
 const fetchPokemon = (state, action) => {
   return {
@@ -28,9 +29,15 @@ const removePokemonFromState = (state, action) => {
   return updateObject(state, { displayModal: false });
 };
 const addUserFavoritePokemonToGlobalSTate = (state, action) => {
+  const pokemonIdArray = []
+
+  action.pokemon.forEach(pokemon => {
+    pokemonIdArray.push(pokemon.pokemonId)
+  })
   return updateObject(state, {
     favoritePokemon: action.pokemon,
     loading: false,
+    favoritePokemonId : pokemonIdArray
   });
 };
 

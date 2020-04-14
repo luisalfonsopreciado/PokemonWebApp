@@ -103,6 +103,7 @@ export function* getUserCredentialsSaga(action) {
       email: res.data.email,
       first_name: "",
       last_name: "",
+      favoritePokemon : res.data.favoritePokemons
     };
 
     yield put(actions.authSuccess(action.token, userData));

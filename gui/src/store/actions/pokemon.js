@@ -91,6 +91,5 @@ export const addPokemonToApi = (id, name, token, userId) => {
     id: id,
     name: name,
     token: token,
-    userId: userId,
   };
 };
