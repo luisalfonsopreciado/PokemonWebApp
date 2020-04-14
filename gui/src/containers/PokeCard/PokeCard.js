@@ -80,7 +80,7 @@ class PokeCard extends React.Component {
               style={{ width: "100px", height: "100px" }}
               className="card-img-top mx-auto rounded d-block mt-2"
               alt=""
-            ></img>
+            />
           ) : null}
           <Sprite
             className="card-img-top rounded mx-auto mt-2"

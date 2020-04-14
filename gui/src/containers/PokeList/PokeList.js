@@ -11,6 +11,7 @@ class PokeList extends Component{
     state = {
         loading: true,
         displaymodal: false,
+        userFavPokemons: [],
     }
 
     componentDidMount(){
@@ -29,10 +30,11 @@ class PokeList extends Component{
 
     render(){
         let PokemonList = <Spinner />
+       
         if(this.props.pkm.pokemons){
             PokemonList = this.props.pkm.pokemons.map((pokemon, key) =>{
                 return <PokeCard
-                isFavorite={this.props.favoritePokemonIdArray.includes(pokemon.name)}
+                isFavorite={this.props.favoritePokemonIdArray ? this.props.favoritePokemonIdArray.includes(pokemon.name) : false}
                 url={pokemon.url}
                 pokemon={pokemon}
                 key={pokemon.name}
