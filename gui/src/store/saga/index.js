@@ -14,6 +14,7 @@ import {
   authCheckState,
   signupUserSaga,
   getUserCredentialsSaga,
+  updateUserSaga,
 } from "./auth";
 
 export function* watchPokemon() {
@@ -23,10 +24,7 @@ export function* watchPokemon() {
     getUserFavoritePokemonSaga
   );
   yield takeEvery(actionTypes.FETCH_POKEMON_LIST, fetchPokemonListSaga);
-  yield takeEvery(
-    actionTypes.ADD_POKEMON_USER_FAVORITE,
-    addPokemonToApiSaga
-  );
+  yield takeEvery(actionTypes.ADD_POKEMON_USER_FAVORITE, addPokemonToApiSaga);
   yield takeEvery(
     actionTypes.REMOVE_POKEMON_USER_FAVORITE,
     removePokemonFromApiSaga
@@ -42,4 +40,5 @@ export function* watchAuth() {
     actionTypes.AUTH_GET_USER_CREDENTIALS,
     getUserCredentialsSaga
   );
+  yield takeEvery(actionTypes.AUTH_UPDATE_USER, updateUserSaga);
 }

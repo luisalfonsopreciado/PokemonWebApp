@@ -24,7 +24,7 @@ router.delete("/users/me", auth, async (req, res) => {
 
 router.patch("/users/me", auth, async (req, res) => {
   const updates = Object.keys(req.body);
-  const allowedUpdates = ["username", "email"];
+  const allowedUpdates = ["username", "email", "first_name", "last_name"];
   const isValidOperation = updates.every((update) =>
     allowedUpdates.includes(update)
   );
@@ -61,9 +61,7 @@ router.post("/users/login", async (req, res) => {
     const token = await user.generateAuthToken();
     res.send({ user, token });
   } catch (e) {
-    res
-      .status(400)
-      .send({ error: "Unable to Log in With The Provided Credentials" });
+    res.status(400).send(["Unable to Log in With The Provided Credentials"]);
   }
 });
 
@@ -79,7 +77,7 @@ router.post("/users/create", async (req, res) => {
     error.push("Invalid Password");
   } else if (!req.body.email) {
     error.push("Email Cannot be Blank");
-  } else if (!req.body.email.isEmail()) {
+  } else if (!req.body.email.isEmail()) { //FIXME
     error.push("Invalid Email");
   }
 

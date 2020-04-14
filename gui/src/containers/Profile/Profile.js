@@ -17,7 +17,6 @@ class Profile extends Component {
   detailViewHandler(pokemon) {
     this.props.history.push("pokemon/" + pokemon);
   }
-
   onViewModal = (pokemon) => {
     this.props.onQuickViewPokemon(pokemon);
   };
@@ -37,6 +36,8 @@ class Profile extends Component {
           first_name={this.props.userData.first_name}
           last_name={this.props.userData.last_name}
           username={this.props.userData.username}
+          onSubmit={this.props.authUpdateUser}
+          token={this.props.token}
         />
       );
     }
@@ -86,6 +87,8 @@ const mapDispatchToProps = (dispatch) => {
     onQuickViewPokemon: (pokemon) =>
       dispatch(actions.addPokemonToState(pokemon)),
     onRemoveModal: () => dispatch(actions.removePokemonFromState()),
+    authUpdateUser: (userData, token) =>
+      dispatch(actions.authUpdateUser(userData, token)),
   };
 };
 export default connect(mapStateToProps, mapDispatchToProps)(Profile);

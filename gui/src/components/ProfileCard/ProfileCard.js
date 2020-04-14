@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import classes from "./ProfileCard.module.css";
 import Button from "../UI/Button/Button";
-import { createForm } from "../../shared/utility";
+import { createForm, updateObject } from "../../shared/utility";
 
 class ProfileCard extends Component {
   state = {
@@ -14,21 +14,6 @@ class ProfileCard extends Component {
         },
         value: this.props.username,
         label: "Username",
-        validation: {
-          required: true,
-          isEmail: true,
-        },
-        valid: true,
-        touched: false,
-      },
-      email: {
-        elementType: "input",
-        elementConfig: {
-          type: "text",
-          placeholder: this.props.email,
-        },
-        value: this.props.email,
-        label: "Email",
         validation: {
           required: true,
           isEmail: true,
@@ -68,23 +53,40 @@ class ProfileCard extends Component {
       },
     },
   };
-  inputChangedHandler = (event) => {
+  
+  inputChangedHandler = (event, controlName) => {
     console.log(event.target.value);
+    const updatedControls = updateObject(this.state.form, {
+        [controlName]: updateObject(this.state.form[controlName], {
+          value: event.target.value,
+          valid: true,
+          touched: true,
+        }),
+      });
+      this.setState({
+        form: updatedControls,
+      });
   };
+
+  submitHandler = () => {
+    const username = this.state.form.username.value
+    const first_name = this.state.form.first_name.value
+    const last_name = this.state.form.last_name.value
+    const user = {username, first_name, last_name}
+    this.props.onSubmit(user, this.props.token)
+  }
   render() {
 
-    let form = createForm(this.state.form)
+    let form = createForm(this.state.form, this.inputChangedHandler)
     return (
       <div className={classes.Container}>
         <h5>{this.props.username}</h5>
         <div>
           <img alt="User" className={classes.ProfileImage} />
         </div>
-        <form>
+        <form onSubmit={this.submitHandler}>
           <strong>{this.props.email}</strong>
           {form}
-          <p>{this.props.first_name}</p>
-          <p>{this.props.last_name}</p>
           <Button btnType="Info">SUBMIT CHANGES</Button>
         </form>
       </div>

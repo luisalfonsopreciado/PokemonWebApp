@@ -88,3 +88,11 @@ export const authCheckState = () => {
     type: actionTypes.AUTH_CHECK_STATE
   }
 }
+
+export const authUpdateUser = (userData, token) => {
+  return {
+    type: actionTypes.AUTH_UPDATE_USER,
+    userData: userData,
+    token: token,
+  }
+}

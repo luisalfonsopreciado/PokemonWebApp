@@ -125,7 +125,7 @@ class Auth extends React.Component {
     }
     let errorMessage = null;
     if (this.props.auth.error) {
-      errorMessage = <p>{this.props.auth.error}</p>;
+      errorMessage = <p style={{color: "red"}}>{this.props.auth.error}</p>;
     }
     return (
       <div className={classes.Auth}>
