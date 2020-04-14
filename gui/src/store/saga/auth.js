@@ -70,15 +70,14 @@ export function* loginUserSaga(action) {
 
 export function* signupUserSaga(action) {
   yield put(actions.authStart());
-  const username = action.username;
-  const email = action.email;
-  const password1 = action.password1;
-  const password2 = action.password2;
-  // Request Body
-  const body = JSON.stringify({ username, email, password1, password2 });
-  let url = "registration/";
+  const signupData = {
+    email : action.email,
+    password : action.password1,
+    username : action.username
+  }
+  let url = "create";
   try {
-    const res = yield axios.post(url, body);
+    const res = yield axios.post(url, signupData);
     const expirationDate = new Date(new Date().getTime() + 3600 * 1000);
     localStorage.setItem("token", res.data.token);
     localStorage.setItem("expirationDate", expirationDate);
