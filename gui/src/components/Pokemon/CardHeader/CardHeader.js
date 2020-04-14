@@ -9,6 +9,7 @@ const CardHeader = (props) => {
     <FontAwesomeIcon
       icon={faStar}
       style={{ color: "#ccc", cursor: "pointer"}}
+      onClick={()=> props.starClicked(props.id, props.name)}
     />
   );
   if(props.isFavorite){

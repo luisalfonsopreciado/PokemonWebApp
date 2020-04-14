@@ -38,8 +38,7 @@ class PokeCard extends React.Component {
       this.props.addUserFavorite(id, name, this.props.token);
     }else{
       this.props.history.push('/login')
-    }
-   
+    } 
   };
 
   render() {

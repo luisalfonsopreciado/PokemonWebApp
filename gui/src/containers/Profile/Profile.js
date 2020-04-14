@@ -8,7 +8,8 @@ import PokeCard from "../PokeCard/PokeCard";
 
 class Profile extends Component {
   componentDidMount() {
-    if (this.props.userId !== undefined && this.props.token !== undefined) { //place it cuz user fav get loaded on pokelist IDK why
+    if (this.props.userId !== undefined && this.props.token !== undefined) {
+      //place it cuz user fav get loaded on pokelist IDK why
       this.props.getUserFavoritePokemon(this.props.userId, this.props.token);
     }
   }
@@ -35,7 +36,7 @@ class Profile extends Component {
           email={this.props.userData.email}
           first_name={this.props.userData.first_name}
           last_name={this.props.userData.last_name}
-          username={this.props.userData.email}
+          username={this.props.userData.username}
         />
       );
     }
@@ -60,7 +61,7 @@ class Profile extends Component {
       <div>
         {isAuthenticated}
         {content}
-        {userPokemon}
+        <div className="row container-fluid mx-auto">{userPokemon}</div>
       </div>
     );
   }

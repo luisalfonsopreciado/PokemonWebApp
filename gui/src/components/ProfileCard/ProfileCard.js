@@ -1,19 +1,19 @@
 import React from 'react'
 import classes from './ProfileCard.module.css'
 import Button from '../UI/Button/Button'
-const ProfileCard = props => {
+
+const ProfileCard = ({username, email, first_name, last_name}) => {
+    
     return(
         <div className={classes.Container}>
-                <h2>Username</h2>
+                <h2>{username}</h2>
             <img alt="User"className={classes.ProfileImage}/>
             <div>
-                <p>{props.email}</p>
-                <p>{props.first_name}</p>
-                <p>{props.last_name}</p>
+                <p>{email}</p>
+                <p>{first_name}</p>
+                <p>{last_name}</p>
             </div>
-            <Button btnType="Info">SUBMIT CHANGES</Button>
-           
-           
+            <Button btnType="Info">SUBMIT CHANGES</Button>       
         </div>
     )
 }

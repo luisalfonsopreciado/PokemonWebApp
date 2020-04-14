@@ -1,15 +1,21 @@
 .Container{
-    width: 400px;
+    width: 90%;
     display: inline-block;
     height: 500px;
-    margin: 40px 10px;
+    position: relative;
+    left: 5%;
+    margin: 40px auto;
     background-color: white;
-    border-radius: 5%;
-    padding: 10px;
+    border-radius: 4%;
+    padding: 30px;
 }
 .ProfileImage{
     position: relative;
     width: 90%;
     height: 50%;
     left: 5%;
+}
+
+@media(min-width: 400px){
+ 
 }

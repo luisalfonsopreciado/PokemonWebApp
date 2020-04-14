@@ -18,7 +18,7 @@ const authSuccess = (state, action) => {
   action.userData.favoritePokemon.forEach((pokemon) => {
     pokemonIdArray.push(pokemon.name);
   });
-  action.userData.favoritePokemon = pokemonIdArray
+  action.userData.favoritePokemon = pokemonIdArray;
 
   return updateObject(state, {
     token: action.token,
@@ -34,7 +34,7 @@ const authFail = (state, action) => {
   });
 };
 const authLogout = (state, action) => {
-  return updateObject(state, { token: null, userId: null });
+  return updateObject(state, { token: null, userId: null, userData: {} });
 };
 const setAuthRedirectPath = (state, action) => {
   return updateObject(state, { authRedirectPath: action.path });

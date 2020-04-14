@@ -9,23 +9,38 @@ import Button from "../UI/Button/Button";
 import { withRouter } from "react-router";
 
 class Pokemon extends Component {
-  
   componentDidMount() {
     this.props.onLoadPokemon(this.props.match.params.id);
   }
 
-  onButtonClickHandler = () =>{
-    this.props.history.push("/")
-  }
+  onButtonClickHandler = () => {
+    this.props.history.push("/");
+  };
+
+  starClickedHandler = (id, name) => {
+    if (this.props.token) {
+      this.props.addUserFavorite(id, name, this.props.token);
+    } else {
+      this.props.history.push("/login");
+    }
+  };
 
   render() {
-    let isFavorite = this.props.userFavoritePokemon.includes(this.props.history.location.pathname.substring(9, 20))
+    let isFavorite = this.props.userFavoritePokemon.includes(
+      this.props.history.location.pathname.substring(9, 20)
+    );
     let card = <Spinner />;
     let PokemonIsDefined = !this.props.loading && this.props.pkm !== undefined;
     if (PokemonIsDefined) {
       card = (
         <div className={classes.Card}>
-          <CardHeader isFavorite={isFavorite} types={this.props.pkm.types} id={this.props.pkm.id} />
+          <CardHeader
+            name={this.props.pkm.name}
+            starClicked={this.starClickedHandler}
+            isFavorite={isFavorite}
+            types={this.props.pkm.types}
+            id={this.props.pkm.id}
+          />
           <CardBody
             name={this.props.pkm.name}
             imageURL={this.props.pkm.imageURL}
@@ -51,12 +66,15 @@ const mapStateToProps = (state) => {
   return {
     pkm: state.pokemon.pokemon,
     loading: state.pokemon.loading,
-    userFavoritePokemon: state.auth.userData.favoritePokemon
+    userFavoritePokemon: state.auth.userData.favoritePokemon,
+    token: state.auth.token,
   };
 };
 const mapDispatchToProps = (dispatch) => {
   return {
     onLoadPokemon: (id) => dispatch(actions.fetchPokemonById(id)),
+    addUserFavorite: (id, name, token) =>
+      dispatch(actions.addPokemonToApi(id, name, token)),
   };
 };
 export default connect(
