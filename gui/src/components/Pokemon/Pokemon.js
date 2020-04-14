@@ -26,9 +26,13 @@ class Pokemon extends Component {
   };
 
   render() {
-    let isFavorite = this.props.userFavoritePokemon.includes(
-      this.props.history.location.pathname.substring(9, 20)
-    );
+    let isFavorite = false
+    if(this.props.userFavoritePokemon){
+       isFavorite = this.props.userFavoritePokemon.includes(
+        this.props.history.location.pathname.substring(9, 20)
+      );
+    }
+    
     let card = <Spinner />;
     let PokemonIsDefined = !this.props.loading && this.props.pkm !== undefined;
     if (PokemonIsDefined) {
