@@ -146,15 +146,12 @@ class Auth extends React.Component{
         }
         let errorMessage = null
         if(this.props.auth.error){
-            const errorArray = handleErrorHandler(this.props.auth.error)
-           errorMessage =  errorArray.map((error, index)=> {
-                return <p key={index}>{error}</p>
-            })
+           errorMessage = <p>{this.props.auth.error}</p> 
         }
         return(
             <div className={classes.Auth}>
                 {authRedirect}
-                <p>{errorMessage}</p>
+                {errorMessage}
                 <form onSubmit={this.submitHandler}>
                     { form }
                     <Button btnType="Success" type="submit"> SUBMIT </Button>

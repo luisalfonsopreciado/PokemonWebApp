@@ -105,14 +105,11 @@ class Auth extends React.Component{
          if(this.props.loading){
             form = <Spinner/>
         }
-
-        // let errorMessage = null
-        // if(this.props.auth.error){
-        //     const errorArray = handleErrorHandler(this.props.auth.error)
-        //    errorMessage =  errorArray.map((error, index)=> {
-        //         return <p key={index}>{error}</p>
-        //     })
-        // }
+        console.log(this.props.error)
+        let errorMessage = null
+        if(this.props.error){
+            errorMessage = <p>{this.props.auth.error.error}</p>
+        }
         let authRedirect = null
         if (this.props.auth.token !== null){
             authRedirect = <Redirect to={this.props.auth.authRedirectPath}/>
@@ -122,7 +119,7 @@ class Auth extends React.Component{
             <div className={classes.Auth}>
                 
                 {authRedirect}
-                {/* {errorMessage} */}
+                {errorMessage}
                 <form onSubmit={this.submitHandler}>
                     { form }
                     <Button btnType="Success"> SUBMIT </Button>
