@@ -43,7 +43,7 @@ class PokeCard extends React.Component {
 
   removeFromFavoriteHandler = (id, name) => {
     if (this.props.token) {
-      this.props.addUserFavorite(id, name, this.props.token);
+      this.props.removeUserFavorite(id, name, this.props.token);
     } else {
       this.props.history.push("/login");
     }
@@ -54,10 +54,21 @@ class PokeCard extends React.Component {
       <FontAwesomeIcon
         icon={faStar}
         style={{ color: "#ccc", cursor: "pointer" }}
+        onClick={() =>
+          this.addToFavoriteHandler(this.state.id, this.props.pokemon.name)
+        }
       />
     );
     if (this.props.isFavorite) {
-      element = <FontAwesomeIcon icon={faStar} style={{ color: "yellow" }} />;
+      element = (
+        <FontAwesomeIcon
+          icon={faStar}
+          style={{ color: "yellow", cursor: "pointer" }}
+          onClick={() =>
+            this.removeFromFavoriteHandler(this.state.id, this.props.pokemon.name)
+          }
+        />
+      );
     }
 
     return (
@@ -68,16 +79,7 @@ class PokeCard extends React.Component {
             style={{ height: "40px", padding: "10px" }}
           >
             <h5 style={{ display: "inline-block" }}>{this.state.pokemon.id}</h5>
-            <p
-              onClick={() =>
-                this.addToFavoriteHandler(
-                  this.state.id,
-                  this.props.pokemon.name
-                )
-              }
-              className="font-weight-bold"
-              style={{ float: "right" }}
-            >
+            <p className="font-weight-bold" style={{ float: "right" }}>
               {element}
             </p>
           </div>

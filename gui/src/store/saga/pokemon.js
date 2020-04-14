@@ -2,7 +2,6 @@ import { put } from "redux-saga/effects";
 import * as actions from "../actions/index";
 import axios from "../../axios/axios";
 import axiosUsers from "../../axios/users";
-import axiosPokemon from "../../axios/pokemon"
 import { createHTTPHeaders } from '../../shared/utility'
 
 export function* fetchPokemonByIdSaga(action) {
@@ -66,36 +65,29 @@ export function* addPokemonToApiSaga(action) {
     pokemonId: action.id,
     name: action.name,
   };
-  try {
-    
-    const url = "create";
-    const response = yield axiosPokemon.post(url, pokemon, config);
-    console.log(response)
-  } catch (error) {
-      
-  }
+
     try{
     const url = "favorite";
-    console.log(config)
-    const response2 = yield axiosUsers.post(url, pokemon, config);
-    console.log(response2)
+    yield axiosUsers.post(url, pokemon, config);
   } catch(error){
     console.log(error)
   }
 }
 
 export function* removePokemonFromApiSaga(action) {
-  const config = createHTTPHeaders(action.token)
+  const config = {
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": action.token,
+    }
+  }
   const pokemon = {
     pokemonId: action.id,
     name: action.name,
   }; 
-  
     try{
     const url = "favorite";
-    console.log(config)
-    const response2 = yield axiosUsers.delete(url, pokemon, config);
-    console.log(response2)
+    yield axiosUsers.delete(url,config, pokemon);
   } catch(error){
     console.log(error)
   }

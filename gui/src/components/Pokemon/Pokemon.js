@@ -48,7 +48,6 @@ class Pokemon extends Component {
           <CardBody
             name={this.props.pkm.name}
             imageURL={this.props.pkm.imageURL}
-            name={this.props.pkm.name}
             stats={this.props.pkm.stats}
             height={this.props.pkm.height}
             weight={this.props.pkm.weight}

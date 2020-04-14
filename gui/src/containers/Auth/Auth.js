@@ -7,7 +7,6 @@ import Spinner from '../../components/UI/Spinner/Spinner'
 import { updateObject, checkValidity} from '../../shared/utility'
 import { connect } from 'react-redux'
 import * as actions from '../../store/actions/index'
-import {handleErrorHandler} from '../../shared/utility'
 
 class Auth extends React.Component{
     state = {
