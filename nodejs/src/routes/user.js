@@ -65,22 +65,12 @@ router.post("/users/login", async (req, res) => {
 });
 
 router.post("/users/create", async (req, res) => {
-  const error = {};
   try {
-    if (req.body.password1 !== req.body.password2) {
-      error.password = "Passwords Must Match";
-      throw new Error();
-    }
-    const body = {
-      username: req.body.username,
-      email: req.body.email,
-      password: req.body.password1,
-    };
-    const user = await User.create(req.body);
-    await user.save();
-    res.status(201).send(user);
+    const user = new User (req.body);
+    const token = await user.generateAuthToken()
+    res.status(201).send({user, token});
   } catch (e) {
-    res.status(400).send(error);
+    res.status(400).send();
   }
 });
 
