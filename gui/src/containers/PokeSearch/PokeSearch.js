@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import PokeCard from "../PokeCard/PokeCard";
-import Spinner from "../../components/UI/Spinner/Spinner";
+import { getPokemonTypes } from "../../shared/utility";
 import {
   createForm,
   updateObject,
@@ -10,21 +10,88 @@ import classes from "./PokeSearch.module.css";
 import Types from "./Types/Types";
 import Button from "../../components/UI/Button/Button";
 
-class PokeList extends Component {
+class PokeSearch extends Component {
   state = {
     loading: true,
     form: {},
-    ticker: {
+    types: {
       elementType: "select",
       elementConfig: {
         options: [],
       },
-      value: 1,
+      value: -1,
       validation: {
         required: true,
       },
       label: "Type",
     },
+    abilities: {
+      elementType: "select",
+      elementConfig: {
+        options: [],
+      },
+      value: -1,
+      validation: {
+        required: true,
+      },
+      label: "Abilities",
+    },
+    nature: {
+      elementType: "select",
+      elementConfig: {
+        options: [],
+      },
+      value: -1,
+      validation: {
+        required: true,
+      },
+      label: "Nature",
+    },
+    habitat: {
+      elementType: "select",
+      elementConfig: {
+        options: [],
+      },
+      value: -1,
+      validation: {
+        required: true,
+      },
+      label: "Habitat",
+    },
+    species: {
+      elementType: "select",
+      elementConfig: {
+        options: [],
+      },
+      value: -1,
+      validation: {
+        required: true,
+      },
+      label: "Species",
+    },
+    generations: {
+      elementType: "select",
+      elementConfig: {
+        options: [],
+      },
+      value: -1,
+      validation: {
+        required: true,
+      },
+      label: "Generations",
+    },
+    eggGroup: {
+      elementType: "select",
+      elementConfig: {
+        options: [],
+      },
+      value: -1,
+      validation: {
+        required: true,
+      },
+      label: "Egg Group",
+    },
+
     pokemons: [],
   };
   componentDidMount() {}
@@ -34,16 +101,23 @@ class PokeList extends Component {
   }
   submitHandler = (event, id) => {
     event.preventDefault();
-    console.log(this.state.ticker.value);
-    const pokemons = getPokemonArrayByType(this.state.ticker.value);
+    console.log(this.state.types.value);
+    const pokemons = getPokemonArrayByType(this.state.types.value);
     pokemons.then((pokemons) => this.setState({ pokemons }));
   };
-  inputTickerChangedHandler = (event) => {
-    const updatedFormElement = updateObject(this.state.ticker, {
-      ...this.state.ticker,
+  inputTypeChangedHandler = (event, field) => {
+    const updatedFormElement = updateObject(eval("this.state." + field), {
+      ...eval("this.state." + field),
       value: event.target.value,
     });
-    this.setState({ ticker: updatedFormElement });
+    this.setState({ types: updatedFormElement });
+  };
+  inputTypeChangedHandler = (event, field) => {
+    const updatedFormElement = updateObject(this.state.abilities, {
+      ...this.state.abilities,
+      value: event.target.value,
+    });
+    this.setState({ abilities: updatedFormElement });
   };
 
   render() {
@@ -74,9 +148,53 @@ class PokeList extends Component {
       <div>
         <div className={classes.formContainer}>
           <Types
-            ticker={this.state.ticker}
-            inputChangedHandler={this.inputTickerChangedHandler}
+            types={this.state.types}
+            inputChangedHandler={this.inputTypeChangedHandler}
+            getOptions={() => getPokemonTypes("https://pokeapi.co/api/v2/type")}
           />
+          <Types
+            types={this.state.abilities}
+            inputChangedHandler={this.inputTypeChangedHandler}
+            getOptions={() =>
+              getPokemonTypes("https://pokeapi.co/api/v2/ability/")
+            }
+          />
+          <Types
+            types={this.state.nature}
+            inputChangedHandler={this.inputTypeChangedHandler}
+            getOptions={() =>
+              getPokemonTypes("https://pokeapi.co/api/v2/nature/")
+            }
+          />
+          <Types
+            types={this.state.habitat}
+            inputChangedHandler={this.inputTypeChangedHandler}
+            getOptions={() =>
+              getPokemonTypes("https://pokeapi.co/api/v2/pokemon-habitat/")
+            }
+          />
+          <Types
+            types={this.state.species}
+            inputChangedHandler={this.inputTypeChangedHandler}
+            getOptions={() =>
+              getPokemonTypes("https://pokeapi.co/api/v2/pokemon-species/")
+            }
+          />
+          <Types
+            types={this.state.generations}
+            inputChangedHandler={this.inputTypeChangedHandler}
+            getOptions={() =>
+              getPokemonTypes("https://pokeapi.co/api/v2/generation/")
+            }
+          />
+          <Types
+            types={this.state.eggGroup}
+            inputChangedHandler={this.inputTypeChangedHandler}
+            getOptions={() =>
+              getPokemonTypes("https://pokeapi.co/api/v2/egg-group/")
+            }
+          />
+         
           <form onSubmit={this.submitHandler}>
             {form}
             <Button btnType="Info">Submit</Button>
@@ -89,4 +207,4 @@ class PokeList extends Component {
   }
 }
 
-export default PokeList;
+export default PokeSearch;

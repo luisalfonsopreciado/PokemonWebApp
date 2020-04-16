@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { getPokemonTypes } from "../../../shared/utility";
 import Input from '../../../components/UI/Input/Input'
 
 const TypeOptions = ({
-  ticker: {
+  types: {
     elementType,
     valid,
     validation,
@@ -11,14 +10,15 @@ const TypeOptions = ({
     touched,
     label,
   },
-  inputChangedHandler
+  inputChangedHandler,
+  getOptions
 }) => {
 
   const [typeArray, setTypeArray] = useState([]);
 
   useEffect(() => {
     console.log("Use Effect Called")
-    const typeArray = getPokemonTypes();
+    const typeArray = getOptions();
     typeArray.then((ticker) => setTypeArray(ticker));
   }, []);
 

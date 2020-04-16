@@ -69,14 +69,15 @@ const createFormElementsArray = (controls) => {
   return formElementsArray;
 };
 
-export const getPokemonTypes = async () => {
-  const res = await axios.get("https://pokeapi.co/api/v2/type");
+export const getPokemonTypes = async (url) => {
+  const res = await axios.get(url);
   // { value: "1", displayValue: "1" },
   const options = [];
+  options.push({value: "-1", displayValue: "none"})
   res.data.results.forEach((element) =>
     options.push({
       displayValue: element.name,
-      value: element.url.split("https://pokeapi.co/api/v2/type/")[1].replace("/",""),
+      value: element.url.split(url)[1].replace("/",""),
     })
   );
   console.log(options);
