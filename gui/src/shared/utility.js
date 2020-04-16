@@ -42,7 +42,7 @@ export const createHTTPHeaders = (token) => {
 
 export const createForm = (JSONForm, inputChangedHandler) => {
   const formElementsArray = createFormElementsArray(JSONForm);
-  return formElementsArray.map((formElement, key) => {
+  return formElementsArray.map((formElement) => {
     return (
       <Input
         key={formElement.id}
@@ -82,3 +82,9 @@ export const getPokemonTypes = async () => {
   console.log(options);
   return options
 };
+
+export const getPokemonArrayByType = async (id) => {
+  const res = await axios.get("https://pokeapi.co/api/v2/type/"+id)
+  console.log(res.data.pokemon)
+  return res.data.pokemon
+}

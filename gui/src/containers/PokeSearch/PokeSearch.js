@@ -1,55 +1,75 @@
 import React, { Component } from "react";
 import PokeCard from "../PokeCard/PokeCard";
 import Spinner from "../../components/UI/Spinner/Spinner";
-import { createForm, updateObject } from "../../shared/utility";
+import {
+  createForm,
+  updateObject,
+  getPokemonArrayByType,
+} from "../../shared/utility";
 import classes from "./PokeSearch.module.css";
 import Types from "./Types/Types";
+import Button from "../../components/UI/Button/Button";
 
 class PokeList extends Component {
   state = {
     loading: true,
-    form: {
-      
-    },
+    form: {},
     ticker: {
-        elementType: "select",
-        elementConfig: {
-          options: [],
-        },
-        value: "",
-        validation: {
-          required: true,
-        },
-        label: "Type",
+      elementType: "select",
+      elementConfig: {
+        options: [],
       },
+      value: 1,
+      validation: {
+        required: true,
+      },
+      label: "Type",
+    },
+    pokemons: [],
   };
   componentDidMount() {}
-  inputTickerChangedHandler = (event) => {
-    const updatedFormElement = updateObject(
-      this.state.ticker,
-      {
-        ...this.state.ticker,
-        value: event.target.value,
-      }
-    );
-    this.setState({ ticker: updatedFormElement});
+
+  detailViewHandler(pokemon) {
+    this.props.history.push("pokemon/" + pokemon);
+  }
+  submitHandler = (event, id) => {
+    event.preventDefault();
+    console.log(this.state.ticker.value);
+    const pokemons = getPokemonArrayByType(this.state.ticker.value);
+    pokemons.then((pokemons) => this.setState({ pokemons }));
   };
+  inputTickerChangedHandler = (event) => {
+    const updatedFormElement = updateObject(this.state.ticker, {
+      ...this.state.ticker,
+      value: event.target.value,
+    });
+    this.setState({ ticker: updatedFormElement });
+  };
+
   render() {
-    let PokemonList = <Spinner />;
+    let PokemonList = <p>Filter Pokemon</p>;
     const form = createForm(this.state.form);
-    // if(this.props.pkm.pokemons){
-    //     PokemonList = this.props.pkm.pokemons.map((pokemon, key) =>{
-    //         return <PokeCard
-    //         isFavorite={this.props.favoritePokemonIdArray ? this.props.favoritePokemonIdArray.includes(pokemon.name) : false}
-    //         url={pokemon.url}
-    //         pokemon={pokemon}
-    //         key={pokemon.name}
-    //         data={pokemon}
-    //         showModal={this.onViewModal}
-    //         pokemonSelect={() => this.detailViewHandler(pokemon.name)}
-    //         />
-    //     })
-    // }
+    if (this.state.pokemons.length > 0) {
+      console.log("start render pokemon");
+      PokemonList = this.state.pokemons.map((pokemon, key) => {
+        return (
+          <PokeCard
+            isFavorite={
+              this.props.favoritePokemonIdArray
+                ? this.props.favoritePokemonIdArray.includes(pokemon.name)
+                : false
+            }
+            url={pokemon.pokemon.url}
+            pokemon={pokemon.pokemon}
+            key={pokemon.pokemon.name}
+            data={pokemon.pokemon}
+            showModal={this.onViewModal}
+            pokemonSelect={() => this.detailViewHandler(pokemon.pokemon.name)}
+          />
+        );
+      });
+    }
+    console.log(this.state.pokemons);
     return (
       <div>
         <div className={classes.formContainer}>
@@ -57,7 +77,10 @@ class PokeList extends Component {
             ticker={this.state.ticker}
             inputChangedHandler={this.inputTickerChangedHandler}
           />
-          {form}
+          <form onSubmit={this.submitHandler}>
+            {form}
+            <Button btnType="Info">Submit</Button>
+          </form>
         </div>
 
         <div className="row container-fluid mx-auto">{PokemonList}</div>

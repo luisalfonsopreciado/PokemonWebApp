@@ -19,6 +19,7 @@ const fetchPokemon = (state, action) => {
     upperBound: action.upper,
   };
 };
+
 const updatePokemonById = (state, action) => {
   return updateObject(state, { pokemon: action.pokemon, loading: false });
 };
