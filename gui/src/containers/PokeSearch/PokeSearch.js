@@ -1,8 +1,7 @@
 import React, { Component } from "react";
 import PokeCard from "../PokeCard/PokeCard";
-import { getPokemonTypes } from "../../shared/utility";
+import { getPokemonTypes, createFormElementsArray} from "../../shared/utility";
 import {
-  createForm,
   updateObject,
   getPokemonArrayByType,
 } from "../../shared/utility";
@@ -13,118 +12,123 @@ import Button from "../../components/UI/Button/Button";
 class PokeSearch extends Component {
   state = {
     loading: true,
-    form: {},
-    types: {
-      elementType: "select",
-      elementConfig: {
-        options: [],
+    form: {
+      types: {
+        elementType: "select",
+        elementConfig: {
+          options: [],
+        },
+        value: -1,
+        validation: {
+          required: true,
+        },
+        label: "Type",
+        url: "https://pokeapi.co/api/v2/type",
       },
-      value: -1,
-      validation: {
-        required: true,
+      abilities: {
+        elementType: "select",
+        elementConfig: {
+          options: [],
+        },
+        value: -1,
+        validation: {
+          required: true,
+        },
+        label: "Abilities",
+        url: "https://pokeapi.co/api/v2/ability/",
       },
-      label: "Type",
+      nature: {
+        elementType: "select",
+        elementConfig: {
+          options: [],
+        },
+        value: -1,
+        validation: {
+          required: true,
+        },
+        label: "Nature",
+        url: "https://pokeapi.co/api/v2/nature/",
+      },
+      habitat: {
+        elementType: "select",
+        elementConfig: {
+          options: [],
+        },
+        value: -1,
+        validation: {
+          required: true,
+        },
+        label: "Habitat",
+        url: "https://pokeapi.co/api/v2/pokemon-habitat/",
+      },
+      species: {
+        elementType: "select",
+        elementConfig: {
+          options: [],
+        },
+        value: -1,
+        validation: {
+          required: true,
+        },
+        label: "Species",
+        url: "https://pokeapi.co/api/v2/pokemon-species/",
+      },
+      generations: {
+        elementType: "select",
+        elementConfig: {
+          options: [],
+        },
+        value: -1,
+        validation: {
+          required: true,
+        },
+        label: "Generations",
+        url: "https://pokeapi.co/api/v2/generation/",
+      },
+      eggGroup: {
+        elementType: "select",
+        elementConfig: {
+          options: [],
+        },
+        value: -1,
+        validation: {
+          required: true,
+        },
+        label: "Egg Group",
+        url: "https://pokeapi.co/api/v2/egg-group/",
+      },
     },
-    abilities: {
-      elementType: "select",
-      elementConfig: {
-        options: [],
-      },
-      value: -1,
-      validation: {
-        required: true,
-      },
-      label: "Abilities",
-    },
-    nature: {
-      elementType: "select",
-      elementConfig: {
-        options: [],
-      },
-      value: -1,
-      validation: {
-        required: true,
-      },
-      label: "Nature",
-    },
-    habitat: {
-      elementType: "select",
-      elementConfig: {
-        options: [],
-      },
-      value: -1,
-      validation: {
-        required: true,
-      },
-      label: "Habitat",
-    },
-    species: {
-      elementType: "select",
-      elementConfig: {
-        options: [],
-      },
-      value: -1,
-      validation: {
-        required: true,
-      },
-      label: "Species",
-    },
-    generations: {
-      elementType: "select",
-      elementConfig: {
-        options: [],
-      },
-      value: -1,
-      validation: {
-        required: true,
-      },
-      label: "Generations",
-    },
-    eggGroup: {
-      elementType: "select",
-      elementConfig: {
-        options: [],
-      },
-      value: -1,
-      validation: {
-        required: true,
-      },
-      label: "Egg Group",
-    },
-
     pokemons: [],
   };
-  componentDidMount() {}
 
   detailViewHandler(pokemon) {
     this.props.history.push("pokemon/" + pokemon);
   }
   submitHandler = (event, id) => {
     event.preventDefault();
-    console.log(this.state.types.value);
+    console.log(this.state.form);
     const pokemons = getPokemonArrayByType(this.state.types.value);
     pokemons.then((pokemons) => this.setState({ pokemons }));
   };
-  inputTypeChangedHandler = (event, field) => {
-    const updatedFormElement = updateObject(eval("this.state." + field), {
-      ...eval("this.state." + field),
-      value: event.target.value,
+
+  inputChangedHandler = (event, inputIdentifier) => {
+    const updatedFormElement = updateObject(
+      this.state.form[inputIdentifier],
+      {
+        value: event.target.value,
+        valid: true,
+      }
+    );
+    const updatedform = updateObject(this.state.form, {
+      [inputIdentifier]: updatedFormElement,
     });
-    this.setState({ types: updatedFormElement });
-  };
-  inputTypeChangedHandler = (event, field) => {
-    const updatedFormElement = updateObject(this.state.abilities, {
-      ...this.state.abilities,
-      value: event.target.value,
-    });
-    this.setState({ abilities: updatedFormElement });
+
+    this.setState({ form: updatedform});
   };
 
   render() {
-    let PokemonList = <p>Filter Pokemon</p>;
-    const form = createForm(this.state.form);
+    let PokemonList = null;
     if (this.state.pokemons.length > 0) {
-      console.log("start render pokemon");
       PokemonList = this.state.pokemons.map((pokemon, key) => {
         return (
           <PokeCard
@@ -143,60 +147,27 @@ class PokeSearch extends Component {
         );
       });
     }
-    console.log(this.state.pokemons);
+
+    const options = createFormElementsArray(this.state.form);
+    console.log(options);
+    let optionsForm = options.map((formElement, key) => {
+      console.log(formElement.config);
+      return (
+        <Types
+          key={formElement.id}
+          types={formElement.config}
+          changed={(event) => this.inputChangedHandler(event, formElement.id)}
+          getOptions={() => getPokemonTypes(formElement.config.url)}
+        />
+      );
+    });
     return (
       <div>
         <div className={classes.formContainer}>
-          <Types
-            types={this.state.types}
-            inputChangedHandler={this.inputTypeChangedHandler}
-            getOptions={() => getPokemonTypes("https://pokeapi.co/api/v2/type")}
-          />
-          <Types
-            types={this.state.abilities}
-            inputChangedHandler={this.inputTypeChangedHandler}
-            getOptions={() =>
-              getPokemonTypes("https://pokeapi.co/api/v2/ability/")
-            }
-          />
-          <Types
-            types={this.state.nature}
-            inputChangedHandler={this.inputTypeChangedHandler}
-            getOptions={() =>
-              getPokemonTypes("https://pokeapi.co/api/v2/nature/")
-            }
-          />
-          <Types
-            types={this.state.habitat}
-            inputChangedHandler={this.inputTypeChangedHandler}
-            getOptions={() =>
-              getPokemonTypes("https://pokeapi.co/api/v2/pokemon-habitat/")
-            }
-          />
-          <Types
-            types={this.state.species}
-            inputChangedHandler={this.inputTypeChangedHandler}
-            getOptions={() =>
-              getPokemonTypes("https://pokeapi.co/api/v2/pokemon-species/")
-            }
-          />
-          <Types
-            types={this.state.generations}
-            inputChangedHandler={this.inputTypeChangedHandler}
-            getOptions={() =>
-              getPokemonTypes("https://pokeapi.co/api/v2/generation/")
-            }
-          />
-          <Types
-            types={this.state.eggGroup}
-            inputChangedHandler={this.inputTypeChangedHandler}
-            getOptions={() =>
-              getPokemonTypes("https://pokeapi.co/api/v2/egg-group/")
-            }
-          />
-         
+
+
           <form onSubmit={this.submitHandler}>
-            {form}
+            {optionsForm}
             <Button btnType="Info">Submit</Button>
           </form>
         </div>

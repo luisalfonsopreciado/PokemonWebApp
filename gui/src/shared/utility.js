@@ -58,7 +58,7 @@ export const createForm = (JSONForm, inputChangedHandler) => {
     );
   });
 };
-const createFormElementsArray = (controls) => {
+export const createFormElementsArray = (controls) => {
   const formElementsArray = [];
   for (let key in controls) {
     formElementsArray.push({
