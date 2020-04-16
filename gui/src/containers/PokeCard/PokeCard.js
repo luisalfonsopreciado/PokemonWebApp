@@ -118,12 +118,12 @@ class PokeCard extends React.Component {
                 )}
             </h3>
             <div className="mt-3">
-              <Button
+              {/* <Button
                 clicked={() => this.props.showModal(this.props.data)}
                 btnType="Info"
               >
                 Quick View
-              </Button>
+              </Button> */}
               <Button clicked={this.props.pokemonSelect} btnType="Danger">
                 Detail View
               </Button>

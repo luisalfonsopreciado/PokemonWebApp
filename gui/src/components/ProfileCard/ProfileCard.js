@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import classes from "./ProfileCard.module.css";
 import Button from "../UI/Button/Button";
+import profilePicture from "../../assets/images/defaultProfile.png";
 import { createForm, updateObject } from "../../shared/utility";
 
 class ProfileCard extends Component {
@@ -53,38 +54,40 @@ class ProfileCard extends Component {
       },
     },
   };
-  
+
   inputChangedHandler = (event, controlName) => {
     console.log(event.target.value);
     const updatedControls = updateObject(this.state.form, {
-        [controlName]: updateObject(this.state.form[controlName], {
-          value: event.target.value,
-          valid: true,
-          touched: true,
-        }),
-      });
-      this.setState({
-        form: updatedControls,
-      });
+      [controlName]: updateObject(this.state.form[controlName], {
+        value: event.target.value,
+        valid: true,
+        touched: true,
+      }),
+    });
+    this.setState({
+      form: updatedControls,
+    });
   };
 
-  submitHandler = () => {
-    const username = this.state.form.username.value
-    const first_name = this.state.form.first_name.value
-    const last_name = this.state.form.last_name.value
-    const user = {username, first_name, last_name}
-    this.props.onSubmit(user, this.props.token)
-  }
+  submitHandler = (e) => {
+    e.preventDefault();
+    const username = this.state.form.username.value;
+    const first_name = this.state.form.first_name.value;
+    const last_name = this.state.form.last_name.value;
+    const user = { username, first_name, last_name };
+    this.props.onSubmit(user, this.props.token);
+  };
   render() {
-
-    let form = createForm(this.state.form, this.inputChangedHandler)
+    let form = createForm(this.state.form, this.inputChangedHandler);
     return (
       <div className={classes.Container}>
-        <h5>{this.props.username}</h5>
+        <h1>{this.props.username}</h1>
+
+        <img alt="User" className={classes.ProfileImage} src={profilePicture} />
         <div>
-          <img alt="User" className={classes.ProfileImage} />
+          <Button btnType="Info">Edit</Button>
         </div>
-        <form onSubmit={this.submitHandler}>
+        <form onSubmit={this.submitHandler} className={classes.Form}>
           <strong>{this.props.email}</strong>
           {form}
           <Button btnType="Info">SUBMIT CHANGES</Button>

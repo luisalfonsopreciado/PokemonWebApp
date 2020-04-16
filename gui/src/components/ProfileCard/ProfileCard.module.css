@@ -8,12 +8,17 @@
     border-radius: 1%;
     padding: 30px;
     border: 3px solid #ccc;
+    text-align: center;
 }
 .ProfileImage{
     position: relative;
-    width: 90%;
-    height: 50%;
-    left: 5%;
+    max-width: 300px;
+    border: 1px solid black;
+    border-radius: 5%;
+    
+}
+.Form{
+    padding: 10px
 }
 
 @media(min-width: 400px){
