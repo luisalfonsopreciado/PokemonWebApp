@@ -1,5 +1,7 @@
-import React from 'react'
-import Input from "../components/UI/Input/Input"
+import React from "react";
+import Input from "../components/UI/Input/Input";
+import axios from "axios";
+
 export const updateObject = (oldObject, updatedProperties) => {
   return {
     ...oldObject,
@@ -65,4 +67,18 @@ const createFormElementsArray = (controls) => {
     });
   }
   return formElementsArray;
+};
+
+export const getPokemonTypes = async () => {
+  const res = await axios.get("https://pokeapi.co/api/v2/type");
+  // { value: "1", displayValue: "1" },
+  const options = [];
+  res.data.results.forEach((element) =>
+    options.push({
+      displayValue: element.name,
+      value: element.url.split("https://pokeapi.co/api/v2/type/")[1].replace("/",""),
+    })
+  );
+  console.log(options);
+  return options
 };

@@ -18,6 +18,9 @@ const asyncProfile = asyncComponent(() => {
 const asyncPokemon = asyncComponent(() => {
   return import("./components/Pokemon/Pokemon");
 });
+const asyncPokeSearch = asyncComponent(() => {
+  return import("./containers/PokeSearch/PokeSearch");
+});
 
 const BaseRouter = () => (
   <React.Fragment>
@@ -28,6 +31,7 @@ const BaseRouter = () => (
       <Route exact path="/signup" component={asyncSignup} />
       <Route exact path="/pokemon/:id" component={asyncPokemon} />
       <Route exact path="/profile" component={asyncProfile} />
+      <Route exact path="/search" component={asyncPokeSearch} />
     </Switch>
   </React.Fragment>
 );
