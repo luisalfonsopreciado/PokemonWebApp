@@ -4,15 +4,15 @@ import PokemonType from "../PokemonType/PokemonType";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar } from "@fortawesome/free-solid-svg-icons";
 
-const CardHeader = (props) => {
+const CardHeader = ({starClicked, isFavorite, id, types, name}) => {
   let star = (
     <FontAwesomeIcon
       icon={faStar}
       style={{ color: "#ccc", cursor: "pointer"}}
-      onClick={()=> props.starClicked(props.id, props.name)}
+      onClick={()=> starClicked(id, name)}
     />
   );
-  if(props.isFavorite){
+  if(isFavorite){
     star = <FontAwesomeIcon icon={faStar} style={{ color: "yellow" }} />
   }
   return (
@@ -20,11 +20,11 @@ const CardHeader = (props) => {
       <div className={classes.Row}>
         <div className={classes.Col2}>
           <div className={classes.Id}>
-            <h5>{props.id}</h5>
+            <h5>{id}</h5>
           </div>
           {star}
         </div>
-        <PokemonType types={props.types} />
+        <PokemonType types={types} />
         
       </div>
     </div>

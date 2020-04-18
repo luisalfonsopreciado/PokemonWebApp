@@ -1,10 +1,7 @@
 import React, { Component } from "react";
 import PokeCard from "../PokeCard/PokeCard";
-import { getPokemonTypes, createFormElementsArray} from "../../shared/utility";
-import {
-  updateObject,
-  getPokemonArrayByType,
-} from "../../shared/utility";
+import { getPokemonTypes, createFormElementsArray } from "../../shared/utility";
+import { updateObject, getPokemonArrayByCategory } from "../../shared/utility";
 import classes from "./PokeSearch.module.css";
 import Types from "./Types/Types";
 import Button from "../../components/UI/Button/Button";
@@ -13,7 +10,7 @@ class PokeSearch extends Component {
   state = {
     loading: true,
     form: {
-      types: {
+      type: {
         elementType: "select",
         elementConfig: {
           options: [],
@@ -23,9 +20,9 @@ class PokeSearch extends Component {
           required: true,
         },
         label: "Type",
-        url: "https://pokeapi.co/api/v2/type",
+        url: "https://pokeapi.co/api/v2/type/",
       },
-      abilities: {
+      ability: {
         elementType: "select",
         elementConfig: {
           options: [],
@@ -37,66 +34,66 @@ class PokeSearch extends Component {
         label: "Abilities",
         url: "https://pokeapi.co/api/v2/ability/",
       },
-      nature: {
-        elementType: "select",
-        elementConfig: {
-          options: [],
-        },
-        value: -1,
-        validation: {
-          required: true,
-        },
-        label: "Nature",
-        url: "https://pokeapi.co/api/v2/nature/",
-      },
-      habitat: {
-        elementType: "select",
-        elementConfig: {
-          options: [],
-        },
-        value: -1,
-        validation: {
-          required: true,
-        },
-        label: "Habitat",
-        url: "https://pokeapi.co/api/v2/pokemon-habitat/",
-      },
-      species: {
-        elementType: "select",
-        elementConfig: {
-          options: [],
-        },
-        value: -1,
-        validation: {
-          required: true,
-        },
-        label: "Species",
-        url: "https://pokeapi.co/api/v2/pokemon-species/",
-      },
-      generations: {
-        elementType: "select",
-        elementConfig: {
-          options: [],
-        },
-        value: -1,
-        validation: {
-          required: true,
-        },
-        label: "Generations",
-        url: "https://pokeapi.co/api/v2/generation/",
-      },
-      eggGroup: {
-        elementType: "select",
-        elementConfig: {
-          options: [],
-        },
-        value: -1,
-        validation: {
-          required: true,
-        },
-        label: "Egg Group",
-        url: "https://pokeapi.co/api/v2/egg-group/",
-      },
+      // nature: {
+      //   elementType: "select",
+      //   elementConfig: {
+      //     options: [],
+      //   },
+      //   value: -1,
+      //   validation: {
+      //     required: true,
+      //   },
+      //   label: "Nature",
+      //   url: "https://pokeapi.co/api/v2/nature/",
+      // },
+    //  habitat: {
+    //     elementType: "select",
+    //     elementConfig: {
+    //       options: [],
+    //     },
+    //     value: -1,
+    //     validation: {
+    //       required: true,
+    //     },
+    //     label: "Habitat",
+    //     url: "https://pokeapi.co/api/v2/pokemon-habitat/",
+    //   },
+      // species: {
+      //   elementType: "select",
+      //   elementConfig: {
+      //     options: [],
+      //   },
+      //   value: -1,
+      //   validation: {
+      //     required: true,
+      //   },
+      //   label: "Species",
+      //   url: "https://pokeapi.co/api/v2/pokemon-species/",
+      // },
+      // generations: {
+      //   elementType: "select",
+      //   elementConfig: {
+      //     options: [],
+      //   },
+      //   value: -1,
+      //   validation: {
+      //     required: true,
+      //   },
+      //   label: "Generations",
+      //   url: "https://pokeapi.co/api/v2/generation/",
+      // },
+      // eggGroup: {
+      //   elementType: "select",
+      //   elementConfig: {
+      //     options: [],
+      //   },
+      //   value: -1,
+      //   validation: {
+      //     required: true,
+      //   },
+      //   label: "Egg Group",
+      //   url: "https://pokeapi.co/api/v2/egg-group/",
+      // },
     },
     pokemons: [],
   };
@@ -106,25 +103,22 @@ class PokeSearch extends Component {
   }
   submitHandler = (event, id) => {
     event.preventDefault();
-    console.log(this.state.form);
-    
-    const pokemons = getPokemonArrayByType(this.state.form.types.value);
+    console.log(id);
+
+    const pokemons = getPokemonArrayByCategory(this.state.form[id].url,this.state.form[id].value);
     pokemons.then((pokemons) => this.setState({ pokemons }));
   };
 
   inputChangedHandler = (event, inputIdentifier) => {
-    const updatedFormElement = updateObject(
-      this.state.form[inputIdentifier],
-      {
-        value: event.target.value,
-        valid: true,
-      }
-    );
+    const updatedFormElement = updateObject(this.state.form[inputIdentifier], {
+      value: event.target.value,
+      valid: true,
+    });
     const updatedform = updateObject(this.state.form, {
       [inputIdentifier]: updatedFormElement,
     });
 
-    this.setState({ form: updatedform});
+    this.setState({ form: updatedform });
   };
 
   render() {
@@ -150,28 +144,24 @@ class PokeSearch extends Component {
     }
 
     const options = createFormElementsArray(this.state.form);
-    console.log(options);
     let optionsForm = options.map((formElement, key) => {
-      console.log(formElement.config);
       return (
-        <Types
+        <form
           key={formElement.id}
-          types={formElement.config}
-          changed={(event) => this.inputChangedHandler(event, formElement.id)}
-          getOptions={() => getPokemonTypes(formElement.config.url)}
-        />
+          onSubmit={(event) => this.submitHandler(event, formElement.id)}
+        >
+          <Types
+            types={formElement.config}
+            changed={(event) => this.inputChangedHandler(event, formElement.id)}
+            getOptions={() => getPokemonTypes(formElement.config.url)}
+          />
+          <Button btnType="Info">Submit</Button>
+        </form>
       );
     });
     return (
       <div>
-        <div className={classes.formContainer}>
-
-
-          <form onSubmit={this.submitHandler}>
-            {optionsForm}
-            <Button btnType="Info">Submit</Button>
-          </form>
-        </div>
+        <div className={classes.formContainer}>{optionsForm}</div>
 
         <div className="row container-fluid mx-auto">{PokemonList}</div>
       </div>

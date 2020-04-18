@@ -80,12 +80,10 @@ export const getPokemonTypes = async (url) => {
       value: element.url.split(url)[1].replace("/",""),
     })
   );
-  console.log(options);
   return options
 };
 
-export const getPokemonArrayByType = async (id) => {
-  const res = await axios.get("https://pokeapi.co/api/v2/type/"+id)
-  console.log(res.data.pokemon)
+export const getPokemonArrayByCategory = async (url, id) => {
+  const res = await axios.get(url+id)
   return res.data.pokemon
 }

@@ -2,11 +2,11 @@ import React from "react";
 import {TYPE_COLOR} from '../PokemonConstants'
 import classes from './PokemonType.module.css'
 
-const PokemonType = (props) => {
+const PokemonType = ({types}) => {
   return (
     <div className={classes.Col10}>
       <div className={classes.Types}>
-        {props.types.map((type) => (
+        {types.map((type) => (
           <span
             key={type}
             className="badge badge-primary badge-pill mr-1"

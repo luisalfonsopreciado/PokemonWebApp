@@ -9,7 +9,6 @@ const TypeOptions = ({
   const [typeArray, setTypeArray] = useState([]);
 
   useEffect(() => {
-    console.log("Use Effect Called");
     const typeArray = getOptions();
     typeArray.then((ticker) => setTypeArray(ticker));
   }, [getOptions]);

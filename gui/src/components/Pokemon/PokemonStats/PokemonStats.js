@@ -1,7 +1,7 @@
 import React from "react";
 
-const PokemonStats = (props) => {
-  return props.stats.map((stat, key) => (
+const PokemonStats = ({stats}) => {
+  return stats.map((stat, key) => (
     <div key={key} className="row align-items-center">
       <div className="col-md-3">
         <p>{stat.stat.name}</p>
@@ -10,7 +10,7 @@ const PokemonStats = (props) => {
         <div className="progress">
           <div
             className="progress-bar"
-            //  role="progressBar"
+             // role="progressBar"
             style={{
               width: `${stat.base_stat}%`,
             }}
