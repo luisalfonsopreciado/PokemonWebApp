@@ -107,7 +107,8 @@ class PokeSearch extends Component {
   submitHandler = (event, id) => {
     event.preventDefault();
     console.log(this.state.form);
-    const pokemons = getPokemonArrayByType(this.state.types.value);
+    
+    const pokemons = getPokemonArrayByType(this.state.form.types.value);
     pokemons.then((pokemons) => this.setState({ pokemons }));
   };
 
