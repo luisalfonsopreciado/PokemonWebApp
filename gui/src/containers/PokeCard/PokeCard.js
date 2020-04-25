@@ -21,6 +21,7 @@ class PokeCard extends React.Component {
     pokemon: "",
     imageLoading: true,
     toManyRequests: false,
+    starColor : "#ccc",
   };
 
   componentDidMount() {
@@ -31,19 +32,21 @@ class PokeCard extends React.Component {
         id: res.data.id,
       });
     });
+     if(this.props.isFavorite ) {
+      this.setState({starColor : "yellow"})
+    }
   }
 
-  addToFavoriteHandler = (id, name) => {
+  toggleFavorite = (id, name) => {
     if (this.props.token) {
-      this.props.addUserFavorite(id, name, this.props.token);
-    } else {
-      this.props.history.push("/login");
-    }
-  };
-
-  removeFromFavoriteHandler = (id, name) => {
-    if (this.props.token) {
-      this.props.removeUserFavorite(id, name, this.props.token);
+      if(this.props.isFavorite){
+        this.setState({starColor : "#ccc"})
+        this.props.removeUserFavorite(id, name, this.props.token);
+      }else{
+        this.setState({starColor : "yellow"})
+        this.props.addUserFavorite(id, name, this.props.token);
+      }
+      
     } else {
       this.props.history.push("/login");
     }
@@ -53,23 +56,12 @@ class PokeCard extends React.Component {
     let element = (
       <FontAwesomeIcon
         icon={faStar}
-        style={{ color: "#ccc", cursor: "pointer" }}
+        style={{ color: this.state.starColor, cursor: "pointer" }}
         onClick={() =>
-          this.addToFavoriteHandler(this.state.id, this.props.pokemon.name)
+          this.toggleFavorite(this.state.id, this.props.pokemon.name)
         }
       />
     );
-    if (this.props.isFavorite) {
-      element = (
-        <FontAwesomeIcon
-          icon={faStar}
-          style={{ color: "yellow", cursor: "pointer" }}
-          onClick={() =>
-            this.removeFromFavoriteHandler(this.state.id, this.props.pokemon.name)
-          }
-        />
-      );
-    }
 
     return (
       <div className="col-md-3 col-sm-6 mt-5">

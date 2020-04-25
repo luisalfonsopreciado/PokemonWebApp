@@ -77,7 +77,7 @@ router.post("/users/create", async (req, res) => {
     error.push("Invalid Password");
   } else if (!req.body.email) {
     error.push("Email Cannot be Blank");
-  } else if (!req.body.email.isEmail()) { //FIXME
+  } else if (!validator.isEmail(req.body.email)) { //FIXME
     error.push("Invalid Email");
   }
 
