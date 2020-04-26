@@ -45,6 +45,7 @@ class Auth extends React.Component {
   };
 
   componentDidMount() {
+    this.props.resetError()
     if (this.props.auth.token != null) {
       this.props.onSetAuthRedirectPath();
     }
@@ -125,6 +126,7 @@ const mapDispatchToProps = (dispatch) => {
       dispatch(actions.login(email, password));
     },
     onSetAuthRedirectPath: () => dispatch(actions.setAuthRedirectPath("/")),
+    resetError: () => dispatch(actions.authResetErrorMessage()),
   };
 };
 

@@ -72,10 +72,12 @@ class Auth extends React.Component {
         touched: false,
       },
     },
+    error: "",
     IsSignup: true,
   };
 
   componentDidMount() {
+    this.props.resetError();
     if (this.props.auth.token != null) {
       console.log("ONSETAUTHREDIRECT");
       this.props.onSetAuthRedirectPath();
@@ -99,13 +101,19 @@ class Auth extends React.Component {
   };
 
   submitHandler = (event) => {
+    this.props.resetError();
     event.preventDefault();
-    console.log("SUBMIT");
     const email = this.state.controls.email.value;
     const username = this.state.controls.username.value;
     const password1 = this.state.controls.password1.value;
     const password2 = this.state.controls.password2.value;
-    this.props.onSignup(username, email, password1, password2);
+    console.log(password1, password2);
+    if (password1 !== password2) {
+      return this.setState({ error: "Passwords must be equal" });
+    } else {
+      this.setState({error: ""})
+      this.props.onSignup(username, email, password1, password2);
+    }
   };
 
   switchAuthModeHandler = () => {
@@ -124,9 +132,13 @@ class Auth extends React.Component {
       authRedirect = <Redirect to={this.props.authRedirectPath} />;
     }
     let errorMessage = null;
-    if (this.props.auth.error) {
-      errorMessage = <p style={{color: "red"}}>{this.props.auth.error}</p>;
+    if (this.state.error) {
+      errorMessage = <p style={{ color: "red" }}>{this.state.error}</p>;
     }
+    if (this.props.auth.error) {
+      errorMessage = <p style={{ color: "red" }}>{this.props.auth.error}</p>;
+    }
+
     return (
       <div className={classes.Auth}>
         {authRedirect}
@@ -160,6 +172,7 @@ const mapDispatchToProps = (dispatch) => {
       dispatch(actions.signup(username, email, password1, password2));
     },
     onSetAuthRedirectPath: () => dispatch(actions.setAuthRedirectPath("/")),
+    resetError: () => dispatch(actions.authResetErrorMessage()),
   };
 };
 

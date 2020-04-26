@@ -85,7 +85,7 @@ export function* signupUserSaga(action) {
     yield put(actions.authSuccess(res.data.token, action.email));
     yield put(actions.checkAuthTimeout(3600));
   } catch (error) {
-    yield put(actions.authFail(error.response.data[0]));
+    yield put(actions.authFail(error.response.data));
   }
 }
 

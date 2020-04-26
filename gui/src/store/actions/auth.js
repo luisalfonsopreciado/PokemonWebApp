@@ -6,6 +6,12 @@ export const authStart = () => {
   };
 };
 
+export const authResetErrorMessage = () => {
+  return {
+    type: actionTypes.AUTH_RESET_ERROR
+  };
+};
+
 export const authSuccess = (token, userData) => {
   return {
     type: actionTypes.AUTH_SUCCESS,

@@ -2,7 +2,6 @@ const express = require("express");
 const router = new express.Router();
 const User = require("../models/User.js");
 const auth = require("../middleware/auth");
-const validator = require("validator");
 
 router.get("/users/me", auth, async (req, res) => {
   try {
@@ -66,30 +65,25 @@ router.post("/users/login", async (req, res) => {
 });
 
 router.post("/users/create", async (req, res) => {
-  const error = [];
-  if (!req.body.username) {
-    error.push("You must provide a Username");
-  } else if (!req.body.password) {
-    error.push("You must Provide a Password");
-  } else if (req.body.password.length <= 6) {
-    error.push("Password must be at least 7 characters long");
-  } else if (req.body.password.includes("password")) {
-    error.push("Invalid Password");
-  } else if (!req.body.email) {
-    error.push("Email Cannot be Blank");
-  } else if (!validator.isEmail(req.body.email)) { //FIXME
-    error.push("Invalid Email");
-  }
-
+  const user = new User(req.body);
+  const error = user.validateSync();
   try {
-    if (error.length > 0) {
-      throw new Error();
-    }
-    const user = new User(req.body);
     const token = await user.generateAuthToken();
+    await user.save();
     res.status(201).send({ user, token });
   } catch (e) {
-    res.status(400).send(error);
+    const user = await User.findOne({ email: req.body.email });
+    let errorMessage = e
+    let errors;
+    if(error){
+      errors = Object.values(error.errors);
+      errorMessage = errors[0].message;
+    }   
+    if (user) {
+      errorMessage = "A user with that email is already registered";
+    }
+    
+    res.status(400).send(errorMessage);
   }
 });
 

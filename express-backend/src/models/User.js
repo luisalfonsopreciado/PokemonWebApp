@@ -2,11 +2,26 @@ const mongoose = require("mongoose");
 const validator = require("validator");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const PokemonSchema = require('./Pokemon')
 
 const userSchema = new mongoose.Schema({
   username: {
     type: String,
-    required: true,
+    // required: true,
+    validate: {
+      validator: (value) => {
+        if (value === "") {
+          throw new Error();
+        }
+      },
+      message: () => "Username is Required",
+      validator: (value) => {
+        if (value==="") {
+          throw new Error();
+        }
+      },
+      message: () => "Username is Required"
+    },
   },
   first_name: {
     type: String,
@@ -16,32 +31,42 @@ const userSchema = new mongoose.Schema({
   },
   email: {
     type: String,
-    required: true,
+    // required: true,
     trim: true,
     lowercase: true,
-    validate(value) {
-      if (!validator.isEmail(value)) {
-        throw new Error("Invalid Email");
-      }
+    validate: {
+      validator: (value) => {
+        if (!validator.isEmail(value)) {
+          throw new Error();
+        }
+      },
+      message: () => "Invalid Email",
+      validator: (value) => {
+        if (value==="") {
+          throw new Error();
+        }
+      },
+      message: () => "Email is Required"
     },
   },
-  favoritePokemons: [
-    {
-      pokemonId: { type: Number, unique: true },
-      name: { type: String, unique: true },
-    },
-  ],
+  favoritePokemons: [PokemonSchema],
   password: {
     type: String,
-    required: true,
-    validate(value) {
-      if (value.toLowerCase().includes("password") || value.length < 6) {
-        throw new Error("Invalid password");
-      }
+    // required: true,
+    validate: {
+      validator: (value) => {
+        if (value.toLowerCase().includes("password") || value.length < 6) {
+          throw new Error();
+        }
+      },
+      message: () => "Invalid Password",
+      validator: (value) => {
+        if (value==="") {
+          throw new Error();
+        }
+      },
+      message: () => "Password is Required"
     },
-  },
-  dateJoined: {
-    type: Date,
   },
   tokens: [
     {
@@ -51,6 +76,8 @@ const userSchema = new mongoose.Schema({
       },
     },
   ],
+}, {
+  timestamps: true
 });
 userSchema.methods.toJSON = function(){
   const user = this
@@ -69,10 +96,7 @@ userSchema.pre("save", async function (next) {
 });
 userSchema.methods.generateAuthToken = async function () {
   const user = this;
-  const token = jwt.sign(
-    { _id: user._id.toString() },
-    "welcometothethunderdome"
-  );
+  const token = jwt.sign({ _id: user._id.toString() }, "welcometothethunderdome");
   user.tokens = user.tokens.concat({ token });
   await user.save();
   return token;

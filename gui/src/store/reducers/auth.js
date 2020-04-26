@@ -13,6 +13,9 @@ const initialState = {
 const authStart = (state, action) => {
   return updateObject(state, { error: null, loading: true });
 };
+const resetError = (state, action) => {
+  return updateObject(state, {error: null})
+}
 const authSuccess = (state, action) => {
   const pokemonIdArray = [];
   action.userData.favoritePokemon.forEach((pokemon) => {
@@ -56,6 +59,8 @@ const reducer = (state = initialState, action) => {
       return setAuthRedirectPath(state, action);
     case actionTypes.SET_USER_INFORMATION:
       return setUserInformationInGlobalState(state, action);
+    case actionTypes.AUTH_RESET_ERROR:
+      return resetError(state, action);
     default:
       return state;
   }
