@@ -74,17 +74,11 @@ router.post("/users/create", async (req, res) => {
     await user.save();
     res.status(201).send({ user, token });
   } catch (e) {
-    const user = await User.findOne({ email: req.body.email });
-    let errorMessage = e;
-    let errors;
+    let errorMessage = "A user with that email is already registered";
     if (error) {
-      errors = Object.values(error.errors);
+      const errors = Object.values(error.errors);
       errorMessage = errors[0].message;
     }
-    if (user) {
-      errorMessage = "A user with that email is already registered";
-    }
-
     res.status(400).send(errorMessage);
   }
 });

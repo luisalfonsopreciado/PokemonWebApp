@@ -49,13 +49,10 @@ export const logout = (token) => {
   }
 };
 
-export const signup = (username, email, password1, password2) => {
+export const signup = ( userData) => {
   return {
     type: actionTypes.AUTH_USER_SIGNUP,
-    username: username,
-    email: email,
-    password1: password1,
-    password2: password2,
+    userData: userData
   }
 };
 

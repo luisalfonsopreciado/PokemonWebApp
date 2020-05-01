@@ -7,7 +7,7 @@ const PokemonSchema = require('./Pokemon')
 const userSchema = new mongoose.Schema({
   username: {
     type: String,
-    // required: true,
+    required: true,
     validate: {
       validator: (value) => {
         if (value === "") {
@@ -31,7 +31,7 @@ const userSchema = new mongoose.Schema({
   },
   email: {
     type: String,
-    // required: true,
+    required: true,
     trim: true,
     lowercase: true,
     validate: {
@@ -52,7 +52,7 @@ const userSchema = new mongoose.Schema({
   favoritePokemons: [PokemonSchema],
   password: {
     type: String,
-    // required: true,
+    required: true,
     validate: {
       validator: (value) => {
         if (value.toLowerCase().includes("password") || value.length < 6) {

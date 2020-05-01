@@ -100,7 +100,7 @@ class Auth extends React.Component {
     }
 
     return (
-      <div className={classes.Auth}>
+      <div className={classes.Container}>
         {authRedirect}
         {errorMessage}
         <form onSubmit={this.submitHandler}>

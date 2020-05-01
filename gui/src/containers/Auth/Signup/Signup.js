@@ -77,9 +77,8 @@ class Auth extends React.Component {
   };
 
   componentDidMount() {
-    this.props.resetError();
-    if (this.props.auth.token != null) {
-      console.log("ONSETAUTHREDIRECT");
+    this.props.resetError()
+    if (this.props.auth.token !== null) {
       this.props.onSetAuthRedirectPath();
     }
   }
@@ -101,19 +100,18 @@ class Auth extends React.Component {
   };
 
   submitHandler = (event) => {
-    this.props.resetError();
     event.preventDefault();
-    const email = this.state.controls.email.value;
-    const username = this.state.controls.username.value;
     const password1 = this.state.controls.password1.value;
     const password2 = this.state.controls.password2.value;
-    console.log(password1, password2);
     if (password1 !== password2) {
       return this.setState({ error: "Passwords must be equal" });
-    } else {
-      this.setState({error: ""})
-      this.props.onSignup(username, email, password1, password2);
     }
+    const userData = {
+      email: this.state.controls.email.value,
+      username: this.state.controls.username.value,
+      password: this.state.controls.password1.value,
+    };
+    this.props.onSignup(userData);
   };
 
   switchAuthModeHandler = () => {
@@ -131,29 +129,32 @@ class Auth extends React.Component {
     if (this.props.isAuthenticated) {
       authRedirect = <Redirect to={this.props.authRedirectPath} />;
     }
+
     let errorMessage = null;
-    if (this.state.error) {
-      errorMessage = <p style={{ color: "red" }}>{this.state.error}</p>;
-    }
     if (this.props.auth.error) {
       errorMessage = <p style={{ color: "red" }}>{this.props.auth.error}</p>;
     }
-
+    if (this.state.error) {
+      errorMessage = <p style={{ color: "red" }}>{this.state.error}</p>;
+    }
     return (
-      <div className={classes.Auth}>
-        {authRedirect}
-        {errorMessage}
-        <form onSubmit={this.submitHandler}>
-          {form}
-          <Button btnType="Success" type="submit">
-            {" "}
-            SUBMIT{" "}
-          </Button>
-          <Button btnType="Danger" clicked={this.switchAuthModeHandler}>
-            {" "}
-            LOGIN{" "}
-          </Button>
-        </form>
+      <div className={classes.MainContainer}>
+        <div className={classes.Container}>
+          {authRedirect}
+          {errorMessage}
+          <form onSubmit={this.submitHandler}>
+            {form}
+
+            <Button btnType="Info" type="submit">
+              {" "}
+              Sign Up{" "}
+            </Button>
+            <Button btnType="Info" clicked={this.switchAuthModeHandler}>
+              {" "}
+              Login{" "}
+            </Button>
+          </form>
+        </div>
       </div>
     );
   }
@@ -163,6 +164,8 @@ const mapStateToProps = (state) => {
   return {
     auth: state.auth,
     isAuthenticated: state.auth.token !== null,
+    authRedirectPath: state.auth.authRedirectPath,
+    loading: state.auth.loading,
   };
 };
 
