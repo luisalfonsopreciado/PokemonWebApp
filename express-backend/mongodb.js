@@ -1,7 +1,7 @@
 const { ObjectId, MongoClient} = require("mongodb")
 
-const connectionURL = "mongodb://127.0.0.1:27017"
-const databaseName = "poke-api"
+const connectionURL = process.env.CONNECTION_URL
+const databaseName = process.env.DB_URL
 
 MongoClient.connect(
     connectionURL,
