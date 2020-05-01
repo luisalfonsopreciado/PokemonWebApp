@@ -68,6 +68,9 @@ const userSchema = new mongoose.Schema({
       message: () => "Password is Required"
     },
   },
+  avatar: {
+    type: Buffer,
+  },
   tokens: [
     {
       token: {

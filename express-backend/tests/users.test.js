@@ -92,9 +92,16 @@ test("Should upload avatar image", async () => {
   expect(user.avatar).toEqual(expect.any(Buffer));
 });
 
+test("Should get avatar image", async () => {
+  jest.setTimeout(8000) //Give it more time to upload
+  await request(app)
+    .get("/users/"+userOneId+"/avatar")
+    .expect(404);
+});
+
 test("Should update valid user fields", async () => {
   const newUserData = {
-    name: "Luis",
+    first_name: "Luis",
     username: "Alfonso",
     email: "alfonsoluispreciado@example.com",
   };
