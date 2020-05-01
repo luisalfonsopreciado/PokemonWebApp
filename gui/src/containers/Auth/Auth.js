@@ -120,6 +120,7 @@ const mapStateToProps = (state) => {
     error: state.auth.error,
   };
 };
+
 const mapDispatchToProps = (dispatch) => {
   return {
     onLogin: (email, password) => {

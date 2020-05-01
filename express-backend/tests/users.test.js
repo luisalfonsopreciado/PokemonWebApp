@@ -30,6 +30,26 @@ test("Should signup a new user", async () => {
   expect(user.password).not.toBe("MyPass777!");
 });
 
+test("Should NOT signup an existing user", async () => {
+  await request(app)
+    .post("/users/create")
+    .send({
+      username: "Luis",
+      email: "stan@example.com",
+      password: "MyPass777!",
+    })
+    .expect(400);
+
+  await request(app)
+    .post("/users/create")
+    .send({
+      username: "Luis",
+      email: "stan@examples.com",
+      password: "MyPass777!",
+    })
+    .expect(201);
+});
+
 test("Should login existing user", async () => {
   const response = await request(app)
     .post("/users/login")
@@ -81,7 +101,7 @@ test("Should NOT delete account for unAuth user", async () => {
 });
 
 test("Should upload avatar image", async () => {
-  jest.setTimeout(8000) //Give it more time to upload
+  jest.setTimeout(8000); //Give it more time to upload
   await request(app)
     .post("/users/me/avatar")
     .set("Authorization", `Bearer ${userOne.tokens[0].token}`)
@@ -93,9 +113,9 @@ test("Should upload avatar image", async () => {
 });
 
 test("Should get avatar image", async () => {
-  jest.setTimeout(8000) //Give it more time to upload
+  jest.setTimeout(8000); //Give it more time to upload
   await request(app)
-    .get("/users/"+userOneId+"/avatar")
+    .get("/users/" + userOneId + "/avatar")
     .expect(404);
 });
 
