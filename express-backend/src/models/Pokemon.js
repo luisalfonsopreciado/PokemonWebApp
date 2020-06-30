@@ -4,12 +4,9 @@ const pokemonSchema = mongoose.Schema({
     name: {
         type : String,
     },
-    pokemonId: {
+    pokemonNumber: {
         type: Number,
     }
-
 })
-
-// const Pokemon = mongoose.model("Pokemon", pokemonSchema)
 
 module.exports = pokemonSchema

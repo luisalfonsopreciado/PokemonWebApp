@@ -79,6 +79,7 @@ router.post("/users/create", async (req, res) => {
       const errors = Object.values(error.errors);
       errorMessage = errors[0].message;
     }
+    console.log(e)
     res.status(400).send(errorMessage);
   }
 });

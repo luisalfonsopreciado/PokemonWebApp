@@ -48,6 +48,24 @@ test("Should NOT signup an existing user", async () => {
       password: "MyPass777!",
     })
     .expect(201);
+
+    await request(app)
+    .post("/users/create")
+    .send({
+      username: "Luis",
+      email: "wiki@example.com",
+      password: "MyPass777!",
+    })
+    .expect(201);
+
+    await request(app)
+    .post("/users/create")
+    .send({
+      username: "Luis",
+      email: "wiksi@example.com",
+      password: "MyPass777!",
+    })
+    .expect(201);
 });
 
 test("Should login existing user", async () => {
