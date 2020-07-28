@@ -17,7 +17,7 @@ it("fails when an incorrect password is supplied", async () => {
     .send({
       email: "test@test.com",
       password: "password",
-      password2: "password"
+      password2: "password",
     })
     .expect(201);
 
@@ -25,18 +25,18 @@ it("fails when an incorrect password is supplied", async () => {
     .post("/api/users/signin")
     .send({
       email: "test@test.com",
-      password: "incorrectpassword",
+      password: "passworddd",
     })
     .expect(400);
 });
 
-it('responds with a token given valid credentials', async() => {
-    await request(app)
+it("responds with a token given valid credentials", async () => {
+  await request(app)
     .post("/api/users/signup")
     .send({
       email: "test@test.com",
       password: "password",
-      password2: "password"
+      password2: "password",
     })
     .expect(201);
 
@@ -48,5 +48,5 @@ it('responds with a token given valid credentials', async() => {
     })
     .expect(200);
 
-    expect(response.body.token).toBeDefined();
-})
+  expect(response.body.token).toBeDefined();
+});

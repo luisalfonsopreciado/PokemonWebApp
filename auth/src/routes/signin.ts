@@ -1,8 +1,7 @@
 import express, { Request, Response } from "express";
 import { body } from "express-validator";
-import { BadRequestError } from "../errors/bad-request-error";
 import { validateRequest } from "../middlewares/validate-request";
-
+import { BadRequestError } from "../errors/bad-request-error";
 import { User } from "../models/user";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
@@ -38,11 +37,12 @@ router.post(
 
     // Generate JWT
     const userJwt = jwt.sign(
-      { id: existingUser.id, email: existingUser.email },
+      {
+        id: existingUser.id,
+        email: existingUser.email,
+      },
       process.env.JWT_KEY!
     );
-
-    existingUser.addToken(userJwt);
 
     res.status(200).send({ user: existingUser, token: userJwt });
   }

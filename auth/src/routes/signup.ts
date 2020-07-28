@@ -1,7 +1,7 @@
 import express, { Request, Response } from "express";
 import { body } from "express-validator";
-import { BadRequestError } from "../errors/bad-request-error";
 import { validateRequest } from "../middlewares/validate-request";
+import { BadRequestError } from "../errors/bad-request-error";
 import { User } from "../models/user";
 import jwt from "jsonwebtoken";
 const router = express.Router();
@@ -43,9 +43,7 @@ router.post(
       process.env.JWT_KEY!
     );
 
-    user.addToken(userJwt);
-    
-    res.status(201).send({ token: userJwt });
+    res.status(201).send({ user, token: userJwt });
   }
 );
 

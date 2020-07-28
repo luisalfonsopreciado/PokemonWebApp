@@ -68,7 +68,7 @@ it("disallows duplicate emails", async () => {
     .expect(400);
 });
 
-it("sets a token successfull signup", async () => {
+it("sets a cookie after successfull signup", async () => {
   const response = await request(app)
     .post("/api/users/signup")
     .send({
@@ -77,7 +77,6 @@ it("sets a token successfull signup", async () => {
       password2: "password",
     })
     .expect(201);
-
   expect(response.body.token).toBeDefined();
 });
 

@@ -1,134 +1,77 @@
-import React from "react";
+import React, { useState, useContext } from "react";
 import Button from "../../components/UI/Button/Button";
 import classes from "./Auth.module.css";
-import { Redirect } from "react-router-dom";
-import Spinner from "../../components/UI/Spinner/Spinner";
-import { updateObject, checkValidity, createForm } from "../../shared/utility";
-import { connect } from "react-redux";
-import * as actions from "../../store/actions/index";
+import useRequest from "../../hooks/useRequest";
+import Input from "../../components/UI/Input/Input";
+import { emailConfig, passwordConfig } from "./config";
+import { UserContext } from "../../context/userContext";
+import { login } from "../../context/userActions";
 
-class Auth extends React.Component {
-  state = {
-    controls: {
-      email: {
-        elementType: "input",
-        elementConfig: {
-          type: "email",
-          placeholder: "Your Email",
-        },
-        value: "",
-        label: "Email",
-        validation: {
-          required: true,
-          isEmail: true,
-        },
-        valid: false,
-        touched: false,
-      },
-      password: {
-        elementType: "input",
-        elementConfig: {
-          type: "password",
-          placeholder: "Your Password",
-        },
-        value: "",
-        label: "Password",
-        validation: {
-          required: true,
-          minLength: 6,
-        },
-        valid: false,
-        touched: false,
-      },
+const Auth = ({ history }) => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const { setUser } = useContext(UserContext);
+
+  const { doRequest, errors } = useRequest({
+    url: process.env.REACT_APP_AUTH_SRV_URL + "/signin",
+    method: "post",
+    body: {
+      email,
+      password,
     },
-    IsSignup: true,
-  };
+    onSuccess: (res) => {
+      const { token, user } = res;
+      login(setUser, token, user);
+      history.push("/");
+    },
+  });
 
-  componentDidMount() {
-    this.props.resetError()
-    if (this.props.auth.token != null) {
-      this.props.onSetAuthRedirectPath();
-    }
-  }
-
-  pokemonSelectedHandler(name) {
-    this.props.history.push({ pathname: "/pokemon/" + name });
-  }
-
-  inputChangedHandler = (event, controlName) => {
-    const updatedControls = updateObject(this.state.controls, {
-      [controlName]: updateObject(this.state.controls[controlName], {
-        value: event.target.value,
-        valid: checkValidity(
-          event.target.value,
-          this.state.controls[controlName].validation
-        ),
-        touched: true,
-      }),
-    });
-    this.setState({
-      controls: updatedControls,
-    });
-  };
-
-  submitHandler = (event) => {
+  const submitHandler = (event) => {
     event.preventDefault();
-    const email = this.state.controls.email.value;
-    const password = this.state.controls.password.value;
-    this.props.onLogin(email, password);
+    doRequest();
   };
 
-  switchAuthModeHandler = () => {
-    this.props.history.push("/signup");
+  const switchAuthModeHandler = () => {
+    history.push("/signup");
   };
 
-  render() {
-    let form = createForm(this.state.controls, this.inputChangedHandler);
-
-    if (this.props.loading) {
-      form = <Spinner />;
-    }
-
-    let errorMessage = null;
-    if (this.props.error) {
-      errorMessage = <p style={{color:"red"}}>{this.props.auth.error[0]}</p>;
-    }
-
-    let authRedirect = null;
-    if (this.props.auth.token !== null) {
-      authRedirect = <Redirect to={this.props.auth.authRedirectPath} />;
-    }
-
-    return (
+  return (
+    <div className={classes.MainContainer}>
       <div className={classes.Container}>
-        {authRedirect}
-        {errorMessage}
-        <form onSubmit={this.submitHandler}>
-          {form}
-          <Button btnType="Success"> SUBMIT </Button>
-          <Button btnType="Danger" clicked={this.switchAuthModeHandler}>
-            SIGN UP
+        <h2>Start Learning, start Earning</h2>
+        {errors}
+
+        <form onSubmit={submitHandler}>
+          <Input
+            key={"email"}
+            elementType={emailConfig.elementType}
+            elementConfig={emailConfig.elementConfig}
+            invalid={emailConfig.valid}
+            shouldValidate={emailConfig.validation}
+            value={email}
+            touched={emailConfig.touched}
+            label={emailConfig.label}
+            changed={(e) => setEmail(e.target.value)}
+          />
+          <Input
+            key={"password"}
+            elementType={passwordConfig.elementType}
+            elementConfig={passwordConfig.elementConfig}
+            invalid={passwordConfig.valid}
+            shouldValidate={passwordConfig.validation}
+            value={password}
+            touched={passwordConfig.touched}
+            label={passwordConfig.label}
+            changed={(e) => setPassword(e.target.value)}
+          />
+          <Button btnType="Info"> Submit </Button>
+          <Button btnType="Info" clicked={switchAuthModeHandler}>
+            Sign Up
           </Button>
         </form>
       </div>
-    );
-  }
-}
-const mapStateToProps = (state) => {
-  return {
-    auth: state.auth,
-    error: state.auth.error,
-  };
+    </div>
+  );
 };
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-    onLogin: (email, password) => {
-      dispatch(actions.login(email, password));
-    },
-    onSetAuthRedirectPath: () => dispatch(actions.setAuthRedirectPath("/")),
-    resetError: () => dispatch(actions.authResetErrorMessage()),
-  };
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(Auth);
+export default Auth;

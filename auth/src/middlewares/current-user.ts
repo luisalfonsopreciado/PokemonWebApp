@@ -1,6 +1,5 @@
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
-import { User, UserDoc} from "../models/user";
 
 interface UserPayload {
   id: string;
@@ -10,26 +9,26 @@ interface UserPayload {
 declare global {
   namespace Express {
     interface Request {
-      currentUser?: UserDoc;
+      currentUser? : UserPayload;
     }
   }
 }
 
-export const currentUser = async (
+export const currentUser = (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
-  if (!req.headers.authorization) {
+  if (!req.header("Authorization")) {
     return next();
   }
 
-  const token = req.headers?.authorization.replace("Bearer ", "");
+  const token = req.header("Authorization")!.replace("Bearer ", "");
 
   try {
     const payload = jwt.verify(token, process.env.JWT_KEY!) as UserPayload;
-    const user = await User.findById(payload.id)
-    req.currentUser = user?.tokens.includes(token) ? user: undefined;
+    req.currentUser = payload;
   } catch (err) {}
+
   next();
 };

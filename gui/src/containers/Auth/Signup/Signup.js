@@ -1,182 +1,90 @@
-import React from "react";
+import React, { useState, useContext } from "react";
 import Button from "../../../components/UI/Button/Button";
 import classes from "../Auth.module.css";
-import { Redirect } from "react-router-dom";
-import Spinner from "../../../components/UI/Spinner/Spinner";
-import { updateObject, checkValidity } from "../../../shared/utility";
-import { connect } from "react-redux";
-import * as actions from "../../../store/actions/index";
-import { createForm } from "../../../shared/utility";
+import Input from "../../../components/UI/Input/Input";
+import useRequest from "../../../hooks/useRequest";
+import { emailConfig, passwordConfig } from "./config";
+import { login } from "../../../context/userActions";
+import { UserContext } from "../../../context/userContext";
 
-class Auth extends React.Component {
-  state = {
-    controls: {
-      email: {
-        elementType: "input",
-        elementConfig: {
-          type: "email",
-          placeholder: "Your Email",
-        },
-        value: "",
-        label: "Email",
-        validation: {
-          required: true,
-          isEmail: true,
-        },
-        valid: false,
-        touched: false,
-      },
-      username: {
-        elementType: "input",
-        elementConfig: {
-          type: "text",
-          placeholder: "Desired Username",
-        },
-        value: "",
-        label: "Username",
-        validation: {
-          required: true,
-          isEmail: true,
-        },
-        valid: false,
-        touched: false,
-      },
-      password1: {
-        elementType: "input",
-        elementConfig: {
-          type: "password",
-          placeholder: "Your Password",
-        },
-        value: "",
-        label: "Password",
-        validation: {
-          required: true,
-          minLength: 6,
-        },
-        valid: false,
-        touched: false,
-      },
-      password2: {
-        elementType: "input",
-        elementConfig: {
-          type: "password",
-          placeholder: "Confirm Password",
-        },
-        value: "",
-        label: "Confirm Password",
-        validation: {
-          required: true,
-          minLength: 6,
-        },
-        valid: false,
-        touched: false,
-      },
+const Signup = ({ history }) => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [password2, setPassword2] = useState("");
+  const { setUser } = useContext(UserContext);
+
+  const { doRequest, errors } = useRequest({
+    url: process.env.REACT_APP_AUTH_SRV_URL + "/signup",
+    method: "post",
+    body: {
+      email,
+      password,
+      password2,
     },
-    error: "",
-    IsSignup: true,
-  };
+    onSuccess: (res) => {
+      const { token, user } = res;
+      login(setUser, token, user);
+      history.push("/");
+    },
+  });
 
-  componentDidMount() {
-    this.props.resetError()
-    if (this.props.auth.token !== null) {
-      this.props.onSetAuthRedirectPath();
-    }
-  }
-
-  inputChangedHandler = (event, controlName) => {
-    const updatedControls = updateObject(this.state.controls, {
-      [controlName]: updateObject(this.state.controls[controlName], {
-        value: event.target.value,
-        valid: checkValidity(
-          event.target.value,
-          this.state.controls[controlName].validation
-        ),
-        touched: true,
-      }),
-    });
-    this.setState({
-      controls: updatedControls,
-    });
-  };
-
-  submitHandler = (event) => {
+  const onSubmit = async (event) => {
     event.preventDefault();
-    const password1 = this.state.controls.password1.value;
-    const password2 = this.state.controls.password2.value;
-    if (password1 !== password2) {
-      return this.setState({ error: "Passwords must be equal" });
-    }
-    const userData = {
-      email: this.state.controls.email.value,
-      username: this.state.controls.username.value,
-      password: this.state.controls.password1.value,
-    };
-    this.props.onSignup(userData);
+    await doRequest();
   };
 
-  switchAuthModeHandler = () => {
-    this.props.history.push("/login");
-  };
-
-  render() {
-    let form = createForm(this.state.controls, this.inputChangedHandler);
-
-    if (this.props.loading) {
-      form = <Spinner />;
-    }
-
-    let authRedirect = null;
-    if (this.props.isAuthenticated) {
-      authRedirect = <Redirect to={this.props.authRedirectPath} />;
-    }
-
-    let errorMessage = null;
-    if (this.props.auth.error) {
-      errorMessage = <p style={{ color: "red" }}>{this.props.auth.error}</p>;
-    }
-    if (this.state.error) {
-      errorMessage = <p style={{ color: "red" }}>{this.state.error}</p>;
-    }
-    return (
+  return (
+    <>
       <div className={classes.MainContainer}>
         <div className={classes.Container}>
-          {authRedirect}
-          {errorMessage}
-          <form onSubmit={this.submitHandler}>
-            {form}
-
+          <h2>Study Smart, Save Time</h2>
+          {errors}
+          <form onSubmit={onSubmit}>
+            <Input
+              key={"email"}
+              elementType={emailConfig.elementType}
+              elementConfig={emailConfig.elementConfig}
+              invalid={emailConfig.valid}
+              shouldValidate={emailConfig.validation}
+              value={email}
+              touched={emailConfig.touched}
+              label={emailConfig.label}
+              changed={(e) => setEmail(e.target.value)}
+            />
+            <Input
+              key={"password1"}
+              elementType={passwordConfig.elementType}
+              elementConfig={passwordConfig.elementConfig}
+              invalid={passwordConfig.valid}
+              shouldValidate={passwordConfig.validation}
+              value={password}
+              touched={passwordConfig.touched}
+              label={passwordConfig.label}
+              changed={(e) => setPassword(e.target.value)}
+            />
+            <Input
+              key={"password2"}
+              elementType={passwordConfig.elementType}
+              elementConfig={passwordConfig.elementConfig}
+              invalid={passwordConfig.valid}
+              shouldValidate={passwordConfig.validation}
+              value={password2}
+              touched={passwordConfig.touched}
+              label={"Confirm Password"}
+              changed={(e) => setPassword2(e.target.value)}
+            />
             <Button btnType="Info" type="submit">
               {" "}
               Sign Up{" "}
             </Button>
-            <Button btnType="Info" clicked={this.switchAuthModeHandler}>
-              {" "}
-              Login{" "}
+            <Button btnType="Info" clicked={() => history.push("/login")}>
+              Login
             </Button>
           </form>
         </div>
       </div>
-    );
-  }
-}
-
-const mapStateToProps = (state) => {
-  return {
-    auth: state.auth,
-    isAuthenticated: state.auth.token !== null,
-    authRedirectPath: state.auth.authRedirectPath,
-    loading: state.auth.loading,
-  };
+    </>
+  );
 };
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-    onSignup: (username, email, password1, password2) => {
-      dispatch(actions.signup(username, email, password1, password2));
-    },
-    onSetAuthRedirectPath: () => dispatch(actions.setAuthRedirectPath("/")),
-    resetError: () => dispatch(actions.authResetErrorMessage()),
-  };
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(Auth);
+export default Signup;

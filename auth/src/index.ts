@@ -2,6 +2,8 @@ import mongoose from "mongoose";
 import { app } from "./app";
 
 const start = async () => {
+  console.log("auth starting up...");
+
   if (!process.env.JWT_KEY) {
     throw new Error("JWT_KEY must be defined");
   }
@@ -19,8 +21,8 @@ const start = async () => {
   } catch (err) {
     console.log(err);
   }
-  app.listen(3000, () => {
-    console.log("Listening on port 3000");
+  app.listen(process.env.PORT, () => {
+    console.log("Listening on port " + process.env.PORT);
   });
 };
 

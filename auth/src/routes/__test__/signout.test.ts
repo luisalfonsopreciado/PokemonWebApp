@@ -1,8 +1,8 @@
 import request from "supertest";
 import { app } from "../../app";
 
-it("clears the token after signing out", async () => {
-  const res = await request(app)
+it("clears the cookie after signing out", async () => {
+  await request(app)
     .post("/api/users/signup")
     .send({
       email: "test@test.com",
@@ -11,19 +11,5 @@ it("clears the token after signing out", async () => {
     })
     .expect(201);
 
-  const token = res.body.token;
-
-  await request(app)
-    .post("/api/users/signout")
-    .set("Authorization", "Bearer " + token)
-    .send({})
-    .expect(200);
-
-  const response = await request(app)
-    .get("/api/users/currentuser")
-    .set("Authorization", "Bearer " + token)
-    .send({})
-    .expect(200);
-
-  expect(response.body.currentUser).toBeNull();
+  await request(app).post("/api/users/signout").send({}).expect(200);
 });

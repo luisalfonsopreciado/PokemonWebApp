@@ -1,12 +1,12 @@
 import mongoose from "mongoose";
 import { MongoMemoryServer } from "mongodb-memory-server";
 import { app } from "../app";
-import request from 'supertest'
+import jwt from "jsonwebtoken"
 
 declare global{
   namespace NodeJS{
     interface Global{
-      signup() : Promise<string[]>
+      signup() : string
     }
   }
 }
@@ -35,20 +35,16 @@ afterAll(async () => {
   await mongoose.connection.close();
 });
 
-global.signup = async () => {
-  const email = 'test@test.com';
-  const password = 'password';
+global.signup = () => {
+  // Build a JWT payload.  { id, email }
 
-  const response = await request(app)
-    .post('/api/users/signup')
-    .send({
-      email,
-      password,
-      password2 : password
-    })
-    .expect(201);
+  const payload = {
+    id: new mongoose.Types.ObjectId().toHexString(),
+    email: "test@test.com",
+  };
 
-  const token = response.body.token;
+  // Create the JWT!
+  const token = jwt.sign(payload, process.env.JWT_KEY!);
 
   return token;
 };
