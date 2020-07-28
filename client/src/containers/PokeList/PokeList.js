@@ -1,85 +1,85 @@
-import React, {Component} from "react"
-import PageManager from '../../components/PageManager/PageManager'
-import { connect } from 'react-redux'
-import * as actions from '../../store/actions/index'
-import PokeCard from '../PokeCard/PokeCard'
-import Modal from '../../components/Modal/Modal'
-import Backdrop from '../../components/Backdrop/Backdrop'
-import Spinner from '../../components/UI/Spinner/Spinner'
+import React, { useState, useEffect, useCallback } from "react";
+import PageManager from "../../components/PageManager/PageManager";
+import { connect } from "react-redux";
+import * as actions from "../../store/actions/index";
+import PokeCard from "../../components/PokeCard/PokeCard";
+import Spinner from "../../components/UI/Spinner/Spinner";
+import useAuth from "../../hooks/useAuth";
+import useRequest from "../../hooks/useRequest";
 
-class PokeList extends Component{
-    state = {
-        loading: true,
-        displaymodal: false,
-        userFavPokemons: [],
-    }
+const PokeList = (props) => {
+  const [loading, setLoading] = useState(true);
+  const [displayModal, setDisplayModal] = useState(false);
+  const [favList, setFavList] = useState([]);
+  const { user } = useAuth();
 
-    componentDidMount(){
-        this.props.getPokemon(this.props.pkm.offset, this.props.pkm.limit)
-    }
-    detailViewHandler(pokemon){
-        this.props.history.push('pokemon/' + pokemon)
-    }
+  const { doRequest, errors } = useCallback(
+    useRequest({
+      url: process.env.REACT_APP_AUTH_SRV_URL + "/favorite",
+      method: "get",
+      onSuccess: (res) => {
+        setFavList(res);
+        setLoading(false)
+      },
+    }),
+    []
+  );
 
-    onViewModal = (pokemon) =>{
-        this.props.onQuickViewPokemon(pokemon)
-    }
-    onRemoveModal = () =>{
-        this.props.onRemoveModal()
-    }
+  useEffect(() => {
+    props.getPokemon(props.pkm.offset, props.pkm.limit);
+    // get FavList
+    user && doRequest();
+  }, []);
 
-    render(){
-        let PokemonList = <Spinner />
-       
-        if(this.props.pkm.pokemons){
-            PokemonList = this.props.pkm.pokemons.map((pokemon, key) =>{
-                return <PokeCard
-                isFavorite={this.props.favoritePokemonIdArray ? this.props.favoritePokemonIdArray.includes(pokemon.name) : false}
-                url={pokemon.url}
-                pokemon={pokemon}
-                key={pokemon.name}
-                data={pokemon}
-                showModal={this.onViewModal}
-                pokemonSelect={() => this.detailViewHandler(pokemon.name)}
-                />
-            })
-        }
-        console.log(this.props.pkm)
-        return (
-            <div>
-                <div className="row container-fluid mx-auto">  
-                    {PokemonList}       
-                </div>  
-                <PageManager 
-                    lower={this.props.pkm.offset}
-                    upper={964}
-                    next={() => this.props.nextPage(this.props.pkm.offset, this.props.pkm.limit)}
-                    previous={() => this.props.previousPage(this.props.pkm.offset, this.props.pkm.limit)}/>
-                {this.props.displayModal ? <Modal closed={this.onRemoveModal} show={this.props.displayModal} pokemon={this.props.pkm.pokemon}/> : null}
-                {this.props.displayModal ? <Backdrop show={this.props.displayModal} /> : null}
-            </div>
-        )
-    }
+  let PokemonList = <Spinner />;
 
+  if (props.pkm.pokemons && !loading) {
+    PokemonList = props.pkm.pokemons.map((pokemon, key) => {
+      return (
+        <PokeCard
+          isFavorite={favList.includes(pokemon.name)}
+          pokemon={pokemon}
+          key={pokemon.name}
+        />
+      );
+    });
+  }
 
-}
+  return (
+    <div>
+      <div className="row container-fluid mx-auto">
+        {errors}
+        {PokemonList}
+      </div>
+      <PageManager
+        lower={props.pkm.offset}
+        upper={964}
+        next={() => props.nextPage(props.pkm.offset, props.pkm.limit)}
+        previous={() => props.previousPage(props.pkm.offset, props.pkm.limit)}
+      />
+    </div>
+  );
+};
 
-const mapStateToProp = state =>{
-    return{
-        pkm : state.pokemon,
-        displayModal : state.pokemon.displayModal,
-        favoritePokemonIdArray: state.auth.userData.favoritePokemon,
+const mapStateToProp = (state) => {
+  return {
+    pkm: state.pokemon,
+    displayModal: state.pokemon.displayModal,
+    favoritePokemonIdArray: state.auth.userData.favoritePokemon,
+  };
+};
+const mapDispatchToProps = (dispatch) => {
+  return {
+    getPokemon: (upperBound, lowerBound) =>
+      dispatch(actions.fetchPokemonList(upperBound, lowerBound)),
+    nextPage: (upperBound, lowerBound) =>
+      dispatch(actions.nextPokemonPage(upperBound, lowerBound)),
+    previousPage: (upperBound, lowerBound) =>
+      dispatch(actions.previousPokemonPage(upperBound, lowerBound)),
+    onQuickViewPokemon: (pokemon) =>
+      dispatch(actions.addPokemonToState(pokemon)),
+    onRemoveModal: () => dispatch(actions.removePokemonFromState()),
+  };
+};
 
-    }
-}
-const mapDispatchToProps = dispatch =>{
-    return{
-        getPokemon: (upperBound, lowerBound) => dispatch(actions.fetchPokemonList(upperBound, lowerBound)),
-        nextPage: (upperBound, lowerBound) => dispatch(actions.nextPokemonPage(upperBound, lowerBound)),
-        previousPage: (upperBound, lowerBound) => dispatch(actions.previousPokemonPage(upperBound, lowerBound)),
-        onQuickViewPokemon : (pokemon) => dispatch(actions.addPokemonToState(pokemon)),
-        onRemoveModal : () => dispatch(actions.removePokemonFromState()),
-    }
-}
-
-export default connect(mapStateToProp,mapDispatchToProps)(PokeList);
+export default connect(mapStateToProp, mapDispatchToProps)(PokeList);

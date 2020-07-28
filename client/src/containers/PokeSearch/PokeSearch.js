@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import PokeCard from "../PokeCard/PokeCard";
+import PokeCard from "../../components/PokeCard/PokeCard";
 import { getPokemonTypes, createFormElementsArray } from "../../shared/utility";
 import { updateObject, getPokemonArrayByCategory } from "../../shared/utility";
 import classes from "./PokeSearch.module.css";

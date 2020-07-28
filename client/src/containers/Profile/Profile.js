@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import Spinner from "../../components/UI/Spinner/Spinner";
 import ProfileCard from "../../components/ProfileCard/ProfileCard";
 import * as actions from "../../store/actions/index";
-import PokeCard from "../PokeCard/PokeCard";
+import PokeCard from "../../components/PokeCard/PokeCard";
 import useAuth from "../../hooks/useAuth";
 
 const Profile = (props) => {
@@ -20,10 +20,7 @@ const Profile = (props) => {
   const onViewModal = (pokemon) => {
     props.onQuickViewPokemon(pokemon);
   };
-
-  const onRemoveModal = () => {
-    props.onRemoveModal();
-  };
+  
   let content = <Spinner />;
 
   if (!props.loading) {
