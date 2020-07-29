@@ -1,7 +1,0 @@
-Pokemon App:
--Search Component that communicates with redux for filtered pokemon
--In the Future, Make Some form of authentication so you can battle with your friends
--Have a profile with your purchased pokemons
--Add a Search Bar
--Add React Native frontend
-
