@@ -3,7 +3,7 @@ import { app } from "../../app";
 
 it("rejects unauthorized users", async () => {
   await request(app)
-    .delete("/api/users/removeFavorite")
+    .post("/api/users/removeFavorite")
     .set("Authorization", "Bearer faketoken")
     .send({
       name: "bulbasaur",
@@ -42,7 +42,7 @@ it("adds pokemon to user favorites", async () => {
   expect(response.body.length).toEqual(2);
 
   response = await request(app)
-    .delete("/api/users/removeFavorite")
+    .post("/api/users/removeFavorite")
     .set("Authorization", "Bearer " + res.body.token)
     .send({
       name: "bulbasaur",
@@ -52,7 +52,7 @@ it("adds pokemon to user favorites", async () => {
   expect(response.body.length).toEqual(1);
 
   response = await request(app)
-    .delete("/api/users/removeFavorite")
+    .post("/api/users/removeFavorite")
     .set("Authorization", "Bearer " + res.body.token)
     .send({
       name: "bulbasaur",
@@ -62,7 +62,7 @@ it("adds pokemon to user favorites", async () => {
   expect(response.body.length).toEqual(1);
 
   response = await request(app)
-    .delete("/api/users/removeFavorite")
+    .post("/api/users/removeFavorite")
     .set("Authorization", "Bearer " + res.body.token)
     .send({
       name: "charizard",
@@ -83,7 +83,7 @@ it("does not crash with bad request", async () => {
     .expect(201);
 
   let response = await request(app)
-    .delete("/api/users/removeFavorite")
+    .post("/api/users/removeFavorite")
     .set("Authorization", "Bearer " + res.body.token)
     .send({
       name: "bulbasaur",

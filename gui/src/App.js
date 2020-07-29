@@ -1,31 +1,30 @@
-import React from 'react';
-import {BrowserRouter} from 'react-router-dom';
-import Layout from './hoc/Layout/Layout'
-import * as actions from './store/actions/index'
-import {connect } from 'react-redux'
+import React from "react";
+import { BrowserRouter } from "react-router-dom";
+import Layout from "./hoc/Layout/Layout";
+import * as actions from "./store/actions/index";
+import { connect } from "react-redux";
 
-class App extends React.Component{
-  componentDidMount(){
-    this.props.onTryAutoSignup()
+class App extends React.Component {
+  componentDidMount() {
+    this.props.onTryAutoSignup();
   }
-  
-  render(){
-    return ( 
+
+  render() {
+    return (
       <BrowserRouter>
         <Layout />
       </BrowserRouter>
-    )
+    );
   }
-  
 }
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
     isAuthenticated: state.auth.token !== null,
-  }
-}
-const mapDispatchToProps = dispatch => {
+  };
+};
+const mapDispatchToProps = (dispatch) => {
   return {
-    onTryAutoSignup: ()=> dispatch(actions.authCheckState())
-  }
-}
-export default connect(mapStateToProps, mapDispatchToProps)(App)
+    onTryAutoSignup: () => dispatch(actions.authCheckState()),
+  };
+};
+export default connect(mapStateToProps, mapDispatchToProps)(App);

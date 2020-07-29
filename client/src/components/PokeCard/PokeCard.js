@@ -31,7 +31,7 @@ const PokeCard = ({ isFavorite, pokemon }) => {
       setPokemonId(res.data.id);
     };
     getPokemonData();
-  }, []);
+  }, [pokemon]);
 
   const { doRequest: addToFav } = useCallback(
     useRequest({

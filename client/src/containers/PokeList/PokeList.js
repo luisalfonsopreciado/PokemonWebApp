@@ -1,7 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
 import PageManager from "../../components/PageManager/PageManager";
-import { connect } from "react-redux";
-import * as actions from "../../store/actions/index";
 import PokeCard from "../../components/PokeCard/PokeCard";
 import Spinner from "../../components/UI/Spinner/Spinner";
 import useAuth from "../../hooks/useAuth";
@@ -23,7 +21,6 @@ const PokeList = (props) => {
       method: "get",
       onSuccess: (res) => {
         setFavList(res);
-        setLoading(false);
       },
     }),
     []
@@ -47,14 +44,13 @@ const PokeList = (props) => {
   );
 
   useEffect(() => {
-    user && doRequest();
-  }, [doRequest]);
-
-  useEffect(() => {
-    setLoading(true);
-    getPokemonList();
+    const getInfo = async () => {
+      user && (await doRequest());
+      await getPokemonList();
+    };
+    getInfo();
     // get FavList
-  }, [state, getPokemonList]);
+  }, [state, getPokemonList, doRequest, user]);
 
   let PokemonList = <Spinner />;
 
@@ -76,35 +72,9 @@ const PokeList = (props) => {
         {errors}
         {PokemonList}
       </div>
-      <PageManager
-        lower={props.pkm.offset}
-        upper={964}
-        next={() => props.nextPage(props.pkm.offset, props.pkm.limit)}
-        previous={() => props.previousPage(props.pkm.offset, props.pkm.limit)}
-      />
+      <PageManager />
     </div>
   );
 };
 
-const mapStateToProp = (state) => {
-  return {
-    pkm: state.pokemon,
-    displayModal: state.pokemon.displayModal,
-    favoritePokemonIdArray: state.auth.userData.favoritePokemon,
-  };
-};
-const mapDispatchToProps = (dispatch) => {
-  return {
-    getPokemon: (upperBound, lowerBound) =>
-      dispatch(actions.fetchPokemonList(upperBound, lowerBound)),
-    nextPage: (upperBound, lowerBound) =>
-      dispatch(actions.nextPokemonPage(upperBound, lowerBound)),
-    previousPage: (upperBound, lowerBound) =>
-      dispatch(actions.previousPokemonPage(upperBound, lowerBound)),
-    onQuickViewPokemon: (pokemon) =>
-      dispatch(actions.addPokemonToState(pokemon)),
-    onRemoveModal: () => dispatch(actions.removePokemonFromState()),
-  };
-};
-
-export default connect(mapStateToProp, mapDispatchToProps)(PokeList);
+export default PokeList;

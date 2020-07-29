@@ -1,53 +1,39 @@
-import React, { useEffect } from "react";
-import { connect } from "react-redux";
+import React, { useEffect, useCallback, useState } from "react";
 import Spinner from "../../components/UI/Spinner/Spinner";
-import ProfileCard from "../../components/ProfileCard/ProfileCard";
-import * as actions from "../../store/actions/index";
 import PokeCard from "../../components/PokeCard/PokeCard";
 import useAuth from "../../hooks/useAuth";
+import useRequest from "../../hooks/useRequest";
 
-const Profile = (props) => {
+const Profile = () => {
   const { user, redirect } = useAuth();
+  const [favList, setFavList] = useState();
+
+  const { doRequest: getFav } = useCallback(
+    useRequest({
+      url: process.env.REACT_APP_AUTH_SRV_URL + "/favorite",
+      method: "get",
+      onSuccess: (res) => {
+        setFavList(res);
+      },
+    }),
+    []
+  );
 
   useEffect(() => {
-    user && props.getUserFavoritePokemon(props.userId, props.token);
-  }, []);
+    user && getFav();
+  }, [getFav, user]);
 
-  const detailViewHandler = (pokemon) => {
-    props.history.push("pokemon/" + pokemon);
-  };
+  let userPokemon = <Spinner />;
 
-  const onViewModal = (pokemon) => {
-    props.onQuickViewPokemon(pokemon);
-  };
-  
-  let content = <Spinner />;
-
-  if (!props.loading) {
-    content = (
-      <ProfileCard
-        email={props.userData.email}
-        first_name={props.userData.first_name}
-        last_name={props.userData.last_name}
-        username={props.userData.username}
-        onSubmit={props.authUpdateUser}
-        token={props.token}
-      />
-    );
-  }
-  
-  let userPokemon = null;
-  if (props.userPokemon) {
-    userPokemon = props.userPokemon.map((pokemon) => {
+  if (favList) {
+    userPokemon = favList.map((pokemon) => {
       return (
         <PokeCard
-          url={"https://pokeapi.co/api/v2/pokemon/" + pokemon.name}
-          pokemon={pokemon}
-          key={pokemon.name}
-          data={pokemon}
           isFavorite={true}
-          showModal={onViewModal}
-          pokemonSelect={() => detailViewHandler(pokemon.name)}
+          pokemon={{
+            url: "https://pokeapi.co/api/v2/pokemon/" + pokemon,
+            name: pokemon,
+          }}
         />
       );
     });
@@ -56,33 +42,11 @@ const Profile = (props) => {
   return (
     <div>
       {redirect()}
-      {content}
+      <br />
+      <h1 className="text-center">Your Favorite Pokemon</h1>
       <div className="row container-fluid mx-auto">{userPokemon}</div>
     </div>
   );
 };
 
-const mapStateToProps = (state) => {
-  return {
-    userData: state.auth.userData,
-    loading: state.auth.loading,
-    isAuth: state.auth.token !== null,
-    userId: state.auth.userData.pk,
-    token: state.auth.token,
-    userPokemon: state.pokemon.favoritePokemon,
-    displayModal: state.pokemon.displayModal,
-  };
-};
-
-const mapDispatchToProps = (dispatch) => {
-  return {
-    getUserFavoritePokemon: (userId, token) =>
-      dispatch(actions.getUserFavoritePokemon(userId, token)),
-    onQuickViewPokemon: (pokemon) =>
-      dispatch(actions.addPokemonToState(pokemon)),
-    onRemoveModal: () => dispatch(actions.removePokemonFromState()),
-    authUpdateUser: (userData, token) =>
-      dispatch(actions.authUpdateUser(userData, token)),
-  };
-};
-export default connect(mapStateToProps, mapDispatchToProps)(Profile);
+export default Profile;

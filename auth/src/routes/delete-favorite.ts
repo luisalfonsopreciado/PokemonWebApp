@@ -6,7 +6,7 @@ import { NotFoundError } from "../errors/not-found-error";
 
 const router = express.Router();
 
-router.delete(
+router.post(
   "/api/users/removeFavorite",
   body("name").trim().notEmpty().withMessage("You must supply a pokemon name"),
   requireAuth,

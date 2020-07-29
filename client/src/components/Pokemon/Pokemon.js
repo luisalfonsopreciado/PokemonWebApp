@@ -40,8 +40,6 @@ class Pokemon extends Component {
         <div className={classes.Card}>
           <CardHeader
             name={this.props.pkm.name}
-            starClicked={this.starClickedHandler}
-            isFavorite={isFavorite}
             types={this.props.pkm.types}
             id={this.props.pkm.id}
           />
