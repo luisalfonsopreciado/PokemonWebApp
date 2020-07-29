@@ -6,12 +6,16 @@ import PokeCard from "../../components/PokeCard/PokeCard";
 import Spinner from "../../components/UI/Spinner/Spinner";
 import useAuth from "../../hooks/useAuth";
 import useRequest from "../../hooks/useRequest";
+import { useStore } from "../../hooks-store/store";
 
 const PokeList = (props) => {
   const [loading, setLoading] = useState(true);
-  const [displayModal, setDisplayModal] = useState(false);
+  const [pokeList, setPokeList] = useState();
   const [favList, setFavList] = useState([]);
   const { user } = useAuth();
+  const [state] = useStore();
+
+  console.log(state);
 
   const { doRequest, errors } = useCallback(
     useRequest({
@@ -19,22 +23,43 @@ const PokeList = (props) => {
       method: "get",
       onSuccess: (res) => {
         setFavList(res);
-        setLoading(false)
+        setLoading(false);
       },
     }),
     []
   );
 
+  const { doRequest: getPokemonList } = useCallback(
+    useRequest({
+      url:
+        process.env.REACT_APP_POKE_BASE_URL +
+        "?offset=" +
+        state.offset +
+        "&limit=" +
+        state.limit,
+      method: "get",
+      onSuccess: (res) => {
+        setPokeList(res.results);
+        setLoading(false);
+      },
+    }),
+    [state]
+  );
+
   useEffect(() => {
-    props.getPokemon(props.pkm.offset, props.pkm.limit);
-    // get FavList
     user && doRequest();
-  }, []);
+  }, [doRequest]);
+
+  useEffect(() => {
+    setLoading(true);
+    getPokemonList();
+    // get FavList
+  }, [state, getPokemonList]);
 
   let PokemonList = <Spinner />;
 
-  if (props.pkm.pokemons && !loading) {
-    PokemonList = props.pkm.pokemons.map((pokemon, key) => {
+  if (pokeList && !loading) {
+    PokemonList = pokeList.map((pokemon, key) => {
       return (
         <PokeCard
           isFavorite={favList.includes(pokemon.name)}

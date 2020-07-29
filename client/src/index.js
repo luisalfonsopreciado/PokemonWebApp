@@ -10,6 +10,9 @@ import authReducer from "./store/reducers/auth";
 import thunk from "redux-thunk";
 import createSagaMiddleware from "redux-saga";
 import { watchPokemon, watchAuth } from "./store/saga/index";
+import configurePokemonStore from "./hooks-store/pokemon";
+
+configurePokemonStore();
 
 const composeEnhancers =
   (process.env.NODE_ENV === "development"
