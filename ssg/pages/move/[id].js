@@ -40,7 +40,7 @@ export async function getStaticProps(context) {
 
 export default ({ apiData }) => {
   return (
-    <div>
+    <div className="bg-light">
       <Container>
         <h1>{apiData.name}</h1>
         <Row>

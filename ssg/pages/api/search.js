@@ -8,7 +8,7 @@ export default (req, res) => {
     JSON.stringify(
       pokemon
         .filter(({ name: { english } }) => english.match(filter))
-        .slice(0, 10)
+        .slice(0, 9)
     )
   );
 };
