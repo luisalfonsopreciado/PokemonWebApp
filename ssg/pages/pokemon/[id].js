@@ -3,7 +3,6 @@ import {
   Container,
   Row,
   Col,
-  Alert,
   ProgressBar,
   Image,
 } from "react-bootstrap";
@@ -49,7 +48,7 @@ export async function getStaticProps(context) {
   );
 
   const { data: encounterData } = await axios.get(
-    // Pokemon locatino encounters
+    // Pokemon location encounters
     res.data.location_area_encounters
   );
 
@@ -75,7 +74,6 @@ export default ({ data, apiData, formData, encounterData }) => {
       <Container className="p-3">
         {data && (
           <>
-
             <Row className="border p-1 bg-white rounded d-flex flex-row flex-wrap">
               <Col md={4}>
                 <h1 className="text-center">{data.name.english}</h1>
@@ -191,7 +189,7 @@ export default ({ data, apiData, formData, encounterData }) => {
                 <Row>
                   {sprites.map((sprite, key) => {
                     return (
-                      <span className="m-auto">
+                      <span className="m-auto" key={key}>
                         <Image src={formData.sprites[sprite]} fluid />
                       </span>
                     );
@@ -234,6 +232,7 @@ export default ({ data, apiData, formData, encounterData }) => {
                         <TableRow>
                           <TableCell>Location</TableCell>
                           <TableCell align="right">Max Chance</TableCell>
+                          <TableCell align="right">Level Range</TableCell>
                           <TableCell align="right">Pokemon Version</TableCell>
                         </TableRow>
                       </TableHead>
@@ -247,6 +246,13 @@ export default ({ data, apiData, formData, encounterData }) => {
                                 </TableCell>
                                 <TableCell align="right">
                                   {version_details[0].max_chance} %
+                                </TableCell>
+                                <TableCell align="right">
+                                  {version_details[0].encounter_details[0]
+                                    .min_level +
+                                    " - " +
+                                    version_details[0].encounter_details[0]
+                                      .max_level}
                                 </TableCell>
                                 <TableCell align="right">
                                   {version_details.map(
