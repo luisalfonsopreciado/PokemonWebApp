@@ -23,7 +23,7 @@ const Home = () => {
   return (
     <div className="bg-dark p-2">
       <Head>
-        <title>Pokemon!</title>
+        <title>Pokedex</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Container>

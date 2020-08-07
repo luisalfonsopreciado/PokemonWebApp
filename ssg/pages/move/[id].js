@@ -1,5 +1,6 @@
-import { Container, Row, Col } from "react-bootstrap";
+import { Container, Row, Col, ProgressBar } from "react-bootstrap";
 import axios from "axios";
+import { TYPE_COLOR } from "../../constants";
 
 export async function getStaticPaths() {
   const res = await axios.get(
@@ -40,21 +41,55 @@ export async function getStaticProps(context) {
 
 export default ({ apiData }) => {
   return (
-    <div className="bg-light">
-      <Container>
-        <h1>{apiData.name}</h1>
-        <Row>
-          <Col xs={4}>
-            <h3>Power</h3>
-            <h3>PP</h3>
-            <h3>Priority</h3>
-            <h3>Type</h3>
-          </Col>
-          <Col xs={8}>
-            <p>{apiData.power}</p>
-            <p>{apiData.pp}</p>
-            <p>{apiData.priority}</p>
-            <p>{apiData.type.name}</p>
+    <div className="bg-dark">
+      <Container className="p-3">
+        <Row className="border p-1 bg-white rounded d-flex flex-row flex-wrap">
+          <h1>{apiData.name}</h1>
+          <Col md={12}>
+            <Row>
+              <Col md={4}>Type</Col>
+              <Col md={8}>
+                <span
+                  className="badge badge-primary badge-pill m-auto"
+                  style={{
+                    backgroundColor: `${TYPE_COLOR[apiData.type.name]}`,
+                  }}
+                >
+                  {apiData.type.name
+                    .toLowerCase()
+                    .split(" ")
+                    .map(
+                      (letter) =>
+                        letter.charAt(0).toUpperCase() + letter.substring(1)
+                    )}
+                </span>
+              </Col>
+            </Row>
+            <Row>
+              <Col md={4}>Power</Col>
+              <Col md={8}>
+                <ProgressBar now={apiData.power} label={`${apiData.power}`} />
+              </Col>
+            </Row>
+            <Row>
+              <Col md={4}>PP</Col>
+              <Col md={8}>
+                <ProgressBar now={apiData.pp} label={`${apiData.pp}`} />
+              </Col>
+            </Row>
+            <Row>
+              <Col md={4}>Accuracy</Col>
+              <Col md={8}>
+                <ProgressBar
+                  now={apiData.accuracy}
+                  label={`${apiData.accuracy}`}
+                />
+              </Col>
+            </Row>
+            <Row>
+              <Col md={4}>Priority</Col>
+              <Col md={8}>{apiData.priority}</Col>
+            </Row>
           </Col>
         </Row>
 

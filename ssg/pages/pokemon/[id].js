@@ -72,11 +72,12 @@ export default ({ data, apiData, formData, encounterData }) => {
       <Head>
         <title>{(data && data.name.english) || "Pokemon"}</title>
       </Head>
-      <Container className="p-5">
+      <Container className="p-3">
         {data && (
           <>
-            <Row className="border p-1 bg-white rounded">
-              <Col xs={4}>
+
+            <Row className="border p-1 bg-white rounded d-flex flex-row flex-wrap">
+              <Col md={4}>
                 <h1 className="text-center">{data.name.english}</h1>
                 <img
                   src={`/pokemon/${data.name.english
@@ -87,9 +88,10 @@ export default ({ data, apiData, formData, encounterData }) => {
                   }}
                 />
               </Col>
-              <Col xs={8}>
+
+              <Col md={8}>
                 <Row>
-                  <h4>Types</h4>
+                  <h5>Types</h5>
                   {apiData.types.map(({ type }, key) => {
                     return (
                       <>
@@ -121,15 +123,24 @@ export default ({ data, apiData, formData, encounterData }) => {
                 </Row>
                 {Object.entries(data.base).map(([key, value]) => (
                   <Row key={key}>
-                    <Col xs={2}>{key}</Col>
-                    <Col xs={10}>
+                    <Col md={4}>{key}</Col>
+                    <Col md={8}>
                       <ProgressBar now={value} label={`${value}`} />
                     </Col>
                   </Row>
                 ))}
                 <Row>
-                  <Col xs={2}>Weight</Col>
-                  <Col xs={10}>
+                  <Col md={4}>Base Experience</Col>
+                  <Col md={8}>
+                    <ProgressBar
+                      now={apiData.base_experience}
+                      label={`${apiData.base_experience}`}
+                    />
+                  </Col>
+                </Row>
+                <Row>
+                  <Col md={4}>Weight</Col>
+                  <Col md={8}>
                     <ProgressBar
                       now={apiData.weight}
                       label={`${apiData.weight}`}
@@ -137,8 +148,8 @@ export default ({ data, apiData, formData, encounterData }) => {
                   </Col>
                 </Row>
                 <Row>
-                  <Col xs={2}>Height</Col>
-                  <Col xs={10}>
+                  <Col md={4}>Height</Col>
+                  <Col md={8}>
                     <ProgressBar
                       now={apiData.height}
                       label={`${apiData.height}`}
@@ -146,36 +157,37 @@ export default ({ data, apiData, formData, encounterData }) => {
                   </Col>
                 </Row>
                 <Row>
-                  <Col xs={2}>Abilities</Col>
-                  <Col xs={10}>
-                    {apiData.abilities.map(({ ability }, key) => {
-                      return (
-                        <Link
-                          href={
-                            "/" +
-                            ability.url.replace(
-                              "https://pokeapi.co/api/v2/",
-                              ""
-                            )
-                          }
-                          key={key}
-                        >
-                          <span className="badge badge-primary badge-pill ml-1 bg-info">
-                            {ability.name
-                              .toLowerCase()
-                              .split(" ")
-                              .map(
-                                (letter) =>
-                                  letter.charAt(0).toUpperCase() +
-                                  letter.substring(1)
-                              )}
-                          </span>
-                        </Link>
-                      );
-                    })}
+                  <Col md={2}>Abilities</Col>
+                  <Col md={10}>
+                    <Row>
+                      {apiData.abilities.map(({ ability }, key) => {
+                        return (
+                          <Link
+                            href={
+                              "/" +
+                              ability.url.replace(
+                                "https://pokeapi.co/api/v2/",
+                                ""
+                              )
+                            }
+                            key={key}
+                          >
+                            <span className="badge badge-primary badge-pill bg-info m-auto">
+                              {ability.name
+                                .toLowerCase()
+                                .split(" ")
+                                .map(
+                                  (letter) =>
+                                    letter.charAt(0).toUpperCase() +
+                                    letter.substring(1)
+                                )}
+                            </span>
+                          </Link>
+                        );
+                      })}
+                    </Row>
                   </Col>
                 </Row>
-
                 <Row>
                   {sprites.map((sprite, key) => {
                     return (
@@ -187,9 +199,10 @@ export default ({ data, apiData, formData, encounterData }) => {
                 </Row>
               </Col>
             </Row>
+
             <Row className="border mt-3 p-2 bg-white rounded">
-              <Col xs={12}>
-                <h3>Moves</h3>
+              <Col md={12}>
+                <h3 className="text-center">Moves</h3>
                 <div
                   style={{
                     display: "flex",
@@ -212,51 +225,59 @@ export default ({ data, apiData, formData, encounterData }) => {
               </Col>
             </Row>
             <Row className="border mt-3 p-2 bg-white rounded">
-              <Col xs={12}>
+              <Col md={12}>
                 <h2 className="text-center">Encounters</h2>
-                <TableContainer component={Paper}>
-                  <Table className={classes.table} aria-label="simple table">
-                    <TableHead>
-                      <TableRow>
-                        <TableCell>Location</TableCell>
-                        <TableCell align="right">Max Chance</TableCell>
-                        <TableCell align="right">Pokemon Version</TableCell>
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      {encounterData.map(
-                        ({ location_area, version_details }, key) => {
-                          return (
-                            <TableRow key={key}>
-                              <TableCell component="th" scope="row">
-                                {titleCase(location_area.name)}
-                              </TableCell>
-                              <TableCell align="right">1</TableCell>
-                              <TableCell align="right">
-                                {version_details.map(
-                                  ({
-                                    encounter_details,
-                                    max_chance,
-                                    version,
-                                  }) => (
-                                    <span className="m-1">
-                                      <Chip
-                                        label={version.name}
-                                        className={classes.chip}
-                                        color="primary"
-                                        variant="outlined"
-                                      />
-                                    </span>
-                                  )
-                                )}
-                              </TableCell>
-                            </TableRow>
-                          );
-                        }
-                      )}
-                    </TableBody>
-                  </Table>
-                </TableContainer>
+                {encounterData.length !== 0 ? (
+                  <TableContainer component={Paper}>
+                    <Table className={classes.table} aria-label="simple table">
+                      <TableHead>
+                        <TableRow>
+                          <TableCell>Location</TableCell>
+                          <TableCell align="right">Max Chance</TableCell>
+                          <TableCell align="right">Pokemon Version</TableCell>
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        {encounterData.map(
+                          ({ location_area, version_details }, key) => {
+                            return (
+                              <TableRow key={key}>
+                                <TableCell component="th" scope="row">
+                                  {titleCase(location_area.name)}
+                                </TableCell>
+                                <TableCell align="right">
+                                  {version_details[0].max_chance} %
+                                </TableCell>
+                                <TableCell align="right">
+                                  {version_details.map(
+                                    ({
+                                      encounter_details,
+                                      max_chance,
+                                      version,
+                                    }) => (
+                                      <span className="m-1">
+                                        <Chip
+                                          label={version.name}
+                                          className={classes.chip}
+                                          color="primary"
+                                          variant="outlined"
+                                        />
+                                      </span>
+                                    )
+                                  )}
+                                </TableCell>
+                              </TableRow>
+                            );
+                          }
+                        )}
+                      </TableBody>
+                    </Table>
+                  </TableContainer>
+                ) : (
+                  <p className="text-center">
+                    This Pokemon Cannot Be Encountered in the Wild
+                  </p>
+                )}
               </Col>
             </Row>
           </>
