@@ -9,15 +9,15 @@ import { requestPageWithExponentialBackoff } from "../util/index";
 
 const getPokemon = async (key, q) => {
   const { data } = await requestPageWithExponentialBackoff(
-    `/api/search?q=${escape(q)}`,
+    `/api/search?q=${q}`,
     axios
   );
-  return data.map((pokemon) => ({
-    ...pokemon,
-    image: `/pokemon/${pokemon.name.english
-      .toLowerCase()
-      .replace(" ", "-")}.jpg`,
-  }));
+  return data.map((pokemon) => {
+    return {
+      ...pokemon,
+      image: `/pokemon/${pokemon.name.toLowerCase().replace(" ", "-")}.jpg`,
+    };
+  });
 };
 
 const Home = () => {
@@ -40,7 +40,7 @@ const Home = () => {
         />
         {data && (
           <Row>
-            {data.map(({ id, name, type, image }) => (
+            {data.map(({ id, name, image }) => (
               <Col xs={4} key={id} className="p-3">
                 <Link href={`/pokemon/${id}`}>
                   <Card className="p-1">
@@ -50,26 +50,7 @@ const Home = () => {
                       style={{ height: 300 }}
                     />
                     <Card.Body>
-                      <h2>{name.english}</h2>
-                      {type.map((type) => (
-                        <span
-                          className="badge badge-primary badge-pill m-2"
-                          style={{
-                            backgroundColor: `${
-                              TYPE_COLOR[type.toLowerCase()]
-                            }`,
-                          }}
-                        >
-                          {type
-                            .toLowerCase()
-                            .split(" ")
-                            .map(
-                              (letter) =>
-                                letter.charAt(0).toUpperCase() +
-                                letter.substring(1)
-                            )}
-                        </span>
-                      ))}
+                      <h2>{name}</h2>
                     </Card.Body>
                   </Card>
                 </Link>

@@ -1,13 +1,26 @@
-import pokemon from "../../pokemon.json";
+import axios from "axios";
+import { requestAllPokemonWithExponentialBackoff } from "../../util";
 
-export default (req, res) => {
+let pokemonCache = [];
+
+const getPokemon = async () => {
+  if (pokemonCache.length > 0) {
+    return pokemonCache;
+  }
+  pokemonCache = await requestAllPokemonWithExponentialBackoff(axios);
+  return pokemonCache;
+};
+
+export default async (req, res) => {
   const filter = req.query.q ? new RegExp(req.query.q, "i") : /.*/;
   res.statusCode = 200;
   res.setHeader("Content-Type", "application/json");
+  const pokemon = await getPokemon();
+  console.log(pokemon);
   res.end(
     JSON.stringify(
-      pokemon
-        .filter(({ name: { english } }) => english.match(filter))
+      Object.values(pokemon)
+        .filter(({ name }) => name.match(filter))
         .slice(0, 9)
     )
   );

@@ -1,13 +1,22 @@
-import pokemon from "../../pokemon.json";
+import axios from "axios";
+import { requestAllPokemonWithExponentialBackoff } from "../../util";
 
-export default (req, res) => {
+let pokemonCache = [];
+
+const getPokemon = async () => {
+  if (pokemonCache.length > 0) {
+    return pokemonCache;
+  }
+  pokemonCache = await requestAllPokemonWithExponentialBackoff(axios);
+  return pokemonCache;
+};
+export default async (req, res) => {
   if (!req.query.name) {
     res.statusCode = 400;
     res.end("Must have a name");
   } else {
-    const found = pokemon.filter(
-      ({ name: { english } }) => english === req.query.name
-    );
+    const pokemon = await getPokemon();
+    const found = Object.values(pokemon).filter(({ name }) => name === req.query.name);
     if (found.length === 0) {
       res.statusCode = 404;
       res.end(`Pokemon ${req.query.name} not found`);

@@ -1,6 +1,5 @@
 import Head from "next/head";
 import { Container, Row, Col, ProgressBar, Image } from "react-bootstrap";
-import pokemon from "../../pokemon.json";
 import axios from "axios";
 import Link from "next/link";
 import { TYPE_COLOR } from "../../constants";
@@ -13,7 +12,10 @@ import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
-import { requestPageWithExponentialBackoff } from "../../util/index";
+import {
+  requestPageWithExponentialBackoff,
+  requestAllPokemonWithExponentialBackoff,
+} from "../../util/index";
 
 const useStyles = makeStyles({
   chip: {
@@ -22,8 +24,10 @@ const useStyles = makeStyles({
 });
 
 export async function getStaticPaths() {
+  const pokemon = await requestAllPokemonWithExponentialBackoff(axios);
+
   return {
-    paths: pokemon.map(({ id }) => ({
+    paths: Object.values(pokemon).map(({ id }) => ({
       params: {
         id: id.toString(),
       },
@@ -33,6 +37,8 @@ export async function getStaticPaths() {
 }
 
 export async function getStaticProps(context) {
+  const pokemon = await requestAllPokemonWithExponentialBackoff(axios);
+
   // Pokemon Info
   const res = await requestPageWithExponentialBackoff(
     "https://pokeapi.co/api/v2/pokemon/" + context.params.id,
@@ -53,7 +59,7 @@ export async function getStaticProps(context) {
 
   return {
     props: {
-      data: pokemon[context.params.id - 1],
+      data: pokemon[context.params.id],
       apiData: res.data,
       formData: response.data,
       encounterData,
@@ -68,16 +74,16 @@ export default ({ data, apiData, formData, encounterData }) => {
   return (
     <div className="bg-dark">
       <Head>
-        <title>{(data && data.name.english) || "Pokemon"}</title>
+        <title>{(data && data.name) || "Pokemon"}</title>
       </Head>
       <Container className="p-3">
         {data && (
           <>
             <Row className="border p-1 bg-white rounded d-flex flex-row flex-wrap">
               <Col md={4}>
-                <h1 className="text-center">{data.name.english}</h1>
+                <h1 className="text-center">{data.name}</h1>
                 <img
-                  src={`/pokemon/${data.name.english
+                  src={`/pokemon/${data.name
                     .toLowerCase()
                     .replace(" ", "-")}.jpg`}
                   style={{
@@ -118,14 +124,19 @@ export default ({ data, apiData, formData, encounterData }) => {
                     );
                   })}
                 </Row>
-                {Object.entries(data.base).map(([key, value]) => (
-                  <Row key={key}>
-                    <Col md={4}>{key}</Col>
-                    <Col md={8}>
-                      <ProgressBar now={value} label={`${value}`} />
-                    </Col>
-                  </Row>
-                ))}
+                {apiData.stats.map((stat) => {
+                  return (
+                    <Row key={stat.stat.name}>
+                      <Col md={4}>{stat.stat.name}</Col>
+                      <Col md={8}>
+                        <ProgressBar
+                          now={stat.base_stat}
+                          label={`${stat.base_stat}`}
+                        />
+                      </Col>
+                    </Row>
+                  );
+                })}
                 <Row>
                   <Col md={4}>Base Experience</Col>
                   <Col md={8}>

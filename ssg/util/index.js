@@ -1,4 +1,48 @@
-export const requestPageWithExponentialBackoff = async (url, axios, maxWait = 10000) => {
+export const requestAllPokemonWithExponentialBackoff = async (axios) => {
+  let res = null;
+  try {
+    res = await requestPageWithExponentialBackoff(
+      "https://pokeapi.co/api/v2/pokemon?limit=100000&offset=0",
+      axios
+    );
+  } catch (errr) {
+    throw "Failed to get all pokemon";
+  }
+
+  const url = "https://pokeapi.co/api/v2/pokemon/";
+
+  const pokemon = {};
+
+  for (let pokemonIdx = 0; pokemonIdx < res.data.results.length; pokemonIdx++) {
+    // Get the pokemon ID from the URL: https://pokeapi.co/api/v2/pokemon/[ID]
+    const pokemonId = (res.data.results[pokemonIdx].id = parseInt(
+      res.data.results[pokemonIdx].url.slice(
+        url.length,
+        res.data.results[pokemonIdx].url.length - 1
+      )
+    ));
+    pokemon[pokemonId] = {
+      ...res.data.results[pokemonIdx],
+      id: pokemonId,
+    };
+  }
+
+  return pokemon;
+};
+
+export const requestPokemonData = async (axios, pokemonId) => {
+  const pokemonData = await requestPageWithExponentialBackoff(
+    "https://pokeapi.co/api/v2/pokemon/" + pokemonId + "/",
+    axios
+  );
+  return pokemonData;
+};
+
+export const requestPageWithExponentialBackoff = async (
+  url,
+  axios,
+  maxWait = 10000
+) => {
   let retryCount = 0;
 
   while (Math.pow(2, retryCount) <= maxWait) {
