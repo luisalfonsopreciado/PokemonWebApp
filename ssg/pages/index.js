@@ -5,9 +5,13 @@ import { Container, FormControl, Row, Col, Card } from "react-bootstrap";
 import axios from "axios";
 import { useQuery } from "react-query";
 import { TYPE_COLOR } from "../constants";
+import { requestPageWithExponentialBackoff } from "../util/index";
 
 const getPokemon = async (key, q) => {
-  const { data } = await axios.get(`/api/search?q=${escape(q)}`);
+  const { data } = await requestPageWithExponentialBackoff(
+    `/api/search?q=${escape(q)}`,
+    axios
+  );
   return data.map((pokemon) => ({
     ...pokemon,
     image: `/pokemon/${pokemon.name.english

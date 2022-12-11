@@ -19,7 +19,6 @@ const CardHeader = ({ id, types, name }) => {
       method: "get",
       onSuccess: (res) => {
         setFavList(res);
-        console.log(name)
         setIsFav(favList.includes(name));
       },
     }),

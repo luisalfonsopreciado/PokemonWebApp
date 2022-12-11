@@ -1,10 +1,12 @@
 import { Container, Alert, Col, Row } from "react-bootstrap";
 import axios from "axios";
 import Link from "next/link";
+import { requestPageWithExponentialBackoff } from "../../util/index";
 
 export async function getStaticPaths() {
-  const res = await axios.get(
-    "https://pokeapi.co/api/v2/type?offset=0&limit=100000"
+  const res = await requestPageWithExponentialBackoff(
+    "https://pokeapi.co/api/v2/type?offset=0&limit=100000",
+    axios
   );
   const types = res.data.results;
 
@@ -28,8 +30,9 @@ export async function getStaticPaths() {
 }
 
 export async function getStaticProps(context) {
-  const res = await axios.get(
-    "https://pokeapi.co/api/v2/type/" + context.params.id
+  const res = await requestPageWithExponentialBackoff(
+    "https://pokeapi.co/api/v2/type/" + context.params.id,
+    axios
   );
 
   return {

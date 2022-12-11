@@ -1,11 +1,5 @@
 import Head from "next/head";
-import {
-  Container,
-  Row,
-  Col,
-  ProgressBar,
-  Image,
-} from "react-bootstrap";
+import { Container, Row, Col, ProgressBar, Image } from "react-bootstrap";
 import pokemon from "../../pokemon.json";
 import axios from "axios";
 import Link from "next/link";
@@ -19,6 +13,7 @@ import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
+import { requestPageWithExponentialBackoff } from "../../util/index";
 
 const useStyles = makeStyles({
   chip: {
@@ -38,18 +33,22 @@ export async function getStaticPaths() {
 }
 
 export async function getStaticProps(context) {
-  const res = await axios.get(
-    // Pokemon Info
-    "https://pokeapi.co/api/v2/pokemon/" + context.params.id
-  );
-  const response = await axios.get(
-    // Pokemon form Data
-    "https://pokeapi.co/api/v2/pokemon-form/" + context.params.id
+  // Pokemon Info
+  const res = await requestPageWithExponentialBackoff(
+    "https://pokeapi.co/api/v2/pokemon/" + context.params.id,
+    axios
   );
 
-  const { data: encounterData } = await axios.get(
-    // Pokemon location encounters
-    res.data.location_area_encounters
+  // Pokemon form Data
+  const response = await requestPageWithExponentialBackoff(
+    "https://pokeapi.co/api/v2/pokemon-form/" + context.params.id,
+    axios
+  );
+
+  // Pokemon location encounters
+  const { data: encounterData } = await requestPageWithExponentialBackoff(
+    res.data.location_area_encounters,
+    axios
   );
 
   return {

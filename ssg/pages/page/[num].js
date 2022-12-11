@@ -53,8 +53,6 @@ export async function getStaticProps(context) {
 export default ({ data, pageNumber }) => {
   const router = useRouter();
 
-  console.log(pageNumber);
-
   const handleChange = (event, value) => {
     router.push("/page/" + value);
   };
